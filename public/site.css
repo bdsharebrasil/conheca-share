@@ -26,3 +26,5 @@ body,button,input,select,textarea{font-family:"Segoe UI",Arial,Helvetica,sans-se
 @media(max-width:700px){.real-booking{grid-template-columns:1fr;gap:16px}.booking-fields{padding:18px}.booking-airports{grid-template-columns:1fr;padding-bottom:0;gap:14px}.booking-swap{position:static;justify-self:center;transform:none}.booking-cover{height:190px}.booking-summary-body{padding:20px}.booking-options{gap:12px}.real-booking .calendar-grid button{max-height:46px}.booking-tabs button{padding:10px 18px}.booking-summary dl{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.scroll-pending{opacity:1;transform:none}.scroll-visible,dialog[open]{animation:none}}
 @media print{.scroll-pending{opacity:1;transform:none}}
+.real-booking .check input{width:15px;min-width:15px;height:15px;padding:0;accent-color:var(--booking-primary)}
+.real-booking .calendar-grid button{width:36px;height:36px;min-height:36px;justify-self:center;aspect-ratio:1}
