@@ -31,3 +31,8 @@ body,button,input,select,textarea{font-family:"Segoe UI",Arial,Helvetica,sans-se
 @media print{.scroll-pending{opacity:1;transform:none}}
 .real-booking .check input{width:15px;min-width:15px;height:15px;padding:0;accent-color:var(--booking-primary)}
 .real-booking .calendar-grid button{width:36px;height:36px;min-height:36px;justify-self:center;aspect-ratio:1}
+.share-ring{position:relative;transition:opacity .8s ease}
+.share-ring.is-visible{animation:spin-ring 25s linear infinite}
+.share-ring.is-visible>span{display:inline-block;animation:counter-spin 25s linear infinite}
+@keyframes spin-ring{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes counter-spin{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
