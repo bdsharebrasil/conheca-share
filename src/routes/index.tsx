@@ -1,23 +1,41 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { SITE_BODY } from "@/site-body";
 
-// The home route ships no og:image, so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+const TITLE = "Conheça a Share Brasil · Seu tempo, em outra altitude";
+const DESC =
+  "Conheça a gestão compartilhada e privada da Share Brasil. Explore o Portal do Cliente, agende um voo demonstrativo e simule custos sem cadastro.";
+const IMG = "https://conheca.share-brasil.com/assets/hero-aircraft.jpg";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: TITLE },
+      { name: "description", content: DESC },
+      { property: "og:title", content: "Share Brasil · Seu tempo, em outra altitude" },
+      { property: "og:description", content: "Gestão profissional de aeronaves. Conheça a Share e experimente a vida de cotista, sem cadastro." },
+      { property: "og:type", content: "website" },
+      { property: "og:locale", content: "pt_BR" },
+      { property: "og:image", content: IMG },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: IMG },
+    ],
+    links: [
+      { rel: "stylesheet", href: "/site.css" },
+      { rel: "canonical", href: "https://conheca.share-brasil.com/" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+  useEffect(() => {
+    // The original interactive script runs against the rendered markup once.
+    const s = document.createElement("script");
+    s.type = "module";
+    s.src = "/app.js";
+    document.body.appendChild(s);
+    return () => s.remove();
+  }, []);
+  return <div style={{ display: "contents" }} dangerouslySetInnerHTML={{ __html: SITE_BODY }} />;
 }
