@@ -30,3 +30,4 @@ use the editor.
 <!-- LOVABLE:END -->
 
 - The home page is the original static Share Brasil site ported verbatim: markup in src/site-body.ts, styles/scripts in public/ (site.css, app.js, model.js). Why: preserves the vanilla-JS interactions exactly.
+- Keep booking presentation helpers in public/booking-view.js and use only a neutral aircraft label in the public illustration; this separates the real-page visual adaptation from the original demo's reservation rules.
