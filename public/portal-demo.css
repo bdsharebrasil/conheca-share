@@ -24,10 +24,10 @@
   background: var(--bg);
   color: var(--ink);
   border-color: var(--line);
-  border-radius: 8px;
+  border-radius: 48px;
   box-shadow: none;
 }
-.demo-shell .portal-sidebar { background: var(--portal-sidebar); border-color: var(--line); padding: 42px 14px 20px; }
+.demo-shell .portal-sidebar { background: var(--portal-sidebar); border-color: var(--line); padding: 42px 14px 20px; border-radius: 0; overflow: hidden; }
 .demo-shell .portal-brand { padding: 12px 7px; font-size: 15px; gap: 12px; }
 .demo-shell .portal-brand small { font-size: 9px; color: var(--muted); }
 .demo-shell .sidebar-caption { color: var(--muted); margin: 30px 10px 14px; font-weight: 700; }

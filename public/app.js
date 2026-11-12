@@ -137,8 +137,6 @@ function action(e){const b=e.target.closest('[data-open],[data-date],[data-actio
 content.addEventListener('click',action);$('#dialog-content').addEventListener('click',action);
 $('#interest-choices').addEventListener('change',e=>{const text=`Olá! Conheci a apresentação da Share Brasil e quero conversar sobre ${e.target.value}.`;$('#whatsapp-primary').href=`https://wa.me/5565981730641?text=${encodeURIComponent(text)}`;});
 $('#current-year').textContent=new Date().getFullYear();
-function printGuide(){window.print();}
-$('#print-guide').addEventListener('click',printGuide);$('#print-footer').addEventListener('click',printGuide);
 function progress(){const total=document.documentElement.scrollHeight-window.innerHeight;$('#reading-progress').style.width=`${total>0?window.scrollY/total*100:0}%`;}
 window.addEventListener('scroll',progress,{passive:true});window.addEventListener('resize',progress);progress();
 const observer=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){document.querySelectorAll('.chapter-bar nav a').forEach(a=>a.classList.toggle('active',a.hash===`#${e.target.id}`));}},{rootMargin:'-20% 0px -60% 0px'});document.querySelectorAll('.chapter').forEach(s=>observer.observe(s));
@@ -162,6 +160,6 @@ window.addEventListener('afterprint',()=>{printNode?.remove();printNode=null;doc
 // Reveal groups once as they enter the page, without hiding content if scripts fail.
 if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
  const reveals=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;const el=entry.target;el.classList.remove('scroll-pending');el.classList.add('scroll-visible');reveals.unobserve(el);});},{threshold:0});
- document.querySelectorAll('.section-head,.intro-grid,.foundation>div,.split-heading,.ownership-layout,.private-note,.services,.safety-row,.experience-benefits>div,.faq-list,.contact-grid').forEach(el=>{if(el.getBoundingClientRect().top>window.innerHeight){el.classList.add('scroll-pending');reveals.observe(el);}});
+ document.querySelectorAll('.section-head,.intro-grid,.foundation>div,.split-heading,.ownership-layout,.services,.safety-row,.experience-benefits>div,.faq-list,.contact-grid').forEach(el=>{if(el.getBoundingClientRect().top>window.innerHeight){el.classList.add('scroll-pending');reveals.observe(el);}});
  animateScreen($('.hero-content'));
 }
