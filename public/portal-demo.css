@@ -1,0 +1,118 @@
+/* Real portal visual language, contained within the public illustration. */
+.demo-shell {
+  --bg: oklch(.137 .011 239);
+  --surface: oklch(.183 .013 233);
+  --surface2: oklch(.213 .016 233);
+  --ink: oklch(.969 .005 133);
+  --muted: oklch(.619 .016 223);
+  --line: oklch(.278 .02 234);
+  --gold: oklch(.881 .172 126);
+  --green: var(--gold);
+  --portal-sidebar: oklch(.156 .012 230);
+  --portal-warning: oklch(.812 .16 77);
+  --portal-soft-accent: color-mix(in oklab, var(--gold) 10%, var(--bg));
+  --portal-fade: linear-gradient(0deg, var(--bg), color-mix(in oklab, var(--bg) 65%, transparent) 55%, transparent);
+  --portal-side-fade: linear-gradient(90deg, color-mix(in oklab, var(--bg) 70%, transparent), transparent 90%);
+  --portal-panel-shadow: 0 1px 0 color-mix(in oklab, var(--ink) 4%, transparent) inset;
+  --booking-background: var(--bg);
+  --booking-surface: var(--surface);
+  --booking-border: var(--line);
+  --booking-primary: var(--gold);
+  --booking-muted: var(--muted);
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--line);
+  border-radius: 8px;
+  box-shadow: none;
+}
+.demo-shell .portal-sidebar { background: var(--portal-sidebar); border-color: var(--line); padding: 42px 14px 20px; }
+.demo-shell .portal-brand { padding: 12px 7px; font-size: 15px; gap: 12px; }
+.demo-shell .portal-brand small { font-size: 9px; color: var(--muted); }
+.demo-shell .sidebar-caption { color: var(--muted); margin: 30px 10px 14px; font-weight: 700; }
+.demo-shell .portal-sidebar nav { gap: 5px; }
+.demo-shell .portal-sidebar nav button { position: relative; font-size: 13px; font-weight: 540; color: var(--muted); padding: 12px; border-radius: 8px; }
+.demo-shell .portal-sidebar nav button.active { background: var(--surface2); color: var(--ink); box-shadow: none; }
+.demo-shell .portal-sidebar nav button.active::after { content: ''; position: absolute; right: 0; width: 3px; height: 19px; border-radius: 3px; background: var(--gold); }
+.demo-shell .portal-sidebar nav button.active > span { color: var(--gold); }
+.demo-shell .portal-sidebar nav button:hover { background: var(--surface2); color: var(--ink); }
+.demo-shell .portal-icon { width: 18px; height: 18px; flex: 0 0 auto; display: inline-block; }
+.demo-shell .portal-icon svg { width: 100%; height: 100%; }
+.demo-shell .demo-person { margin-top: auto; padding: 14px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.demo-shell .demo-person small { color: var(--muted); }
+.demo-shell .avatar { background: var(--portal-soft-accent); color: var(--gold); }
+.demo-shell .portal-top { border-color: var(--line); color: var(--muted); padding: 12px 24px; }
+.demo-shell #demo-content { padding: 24px; }
+.demo-shell .portal-welcome { margin: -24px -24px 28px; padding: 32px; min-height: 250px; border-radius: 0; background: var(--bg); }
+.demo-shell .portal-welcome:after { background: var(--portal-fade), var(--portal-side-fade); }
+.demo-shell .portal-welcome img { object-position: center; }
+.demo-shell .portal-welcome .welcome-greeting { color: var(--ink); font-size: 16px !important; }
+.demo-shell #demo-content .portal-welcome h3 { font-size: 36px; font-weight: 650; margin: 12px 0 28px; line-height: 1.15; }
+.demo-shell .portal-welcome .eyebrow { color: var(--muted); font-size: 8px; }
+.demo-shell .welcome-aircraft { display: block; font-size: 19px; margin-top: 4px; color: var(--ink); }
+.demo-shell .portal-welcome p { color: var(--muted); }
+.demo-shell .welcome-chip { position: absolute; right: 28px; bottom: 28px; background: var(--ink); color: var(--bg); padding: 7px 12px; border-radius: 20px; font-size: 10px; font-weight: 650; }
+.demo-shell :is(.panel,.stat-card,.sim-result,.booking-card) { background: var(--surface); border-color: var(--line); border-radius: 8px; box-shadow: var(--portal-panel-shadow); }
+.demo-shell .portal-dashboard { gap: 18px; margin-bottom: 22px; }
+.demo-shell .portal-dashboard > .panel { padding: 24px; min-height: 214px; }
+.demo-shell .dashboard-title { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .12em; margin-bottom: 20px; }
+.demo-shell .dashboard-title button { color: var(--muted); padding: 4px; }
+.demo-shell .dashboard-amount { display: block; color: var(--portal-warning); font-size: 30px; font-weight: 650; margin-bottom: 12px; overflow-wrap: anywhere; }
+.demo-shell .dashboard-ledger { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--line); }
+.demo-shell .dashboard-ledger strong { color: var(--ink); }
+.demo-shell .stat-card.gold { background: var(--surface); }
+.demo-shell .stat-card.gold .stat-number { color: var(--gold); }
+.demo-shell :is(.stat-label,.dim,.field,.check,.assumptions,.stat-card p,.stat-number small,.cost-layer small) { color: var(--muted); }
+.demo-shell :is(.badge,.badge.success) { background: var(--portal-soft-accent); border-color: var(--line); color: var(--gold); }
+.demo-shell .badge.warning { color: var(--portal-warning); background: var(--surface2); border-color: var(--line); }
+.demo-shell .mini-button { background: var(--surface2); border-color: var(--line); color: var(--ink); }
+.demo-shell .mini-button:hover { background: var(--portal-soft-accent); border-color: var(--gold); }
+.demo-shell .mini-button.accent { background: var(--gold); border-color: var(--gold); color: var(--bg); border-radius: 22px; }
+.demo-shell :is(.field input,.field select,.field textarea,.document-item) { background: var(--bg); border-color: var(--line); color: var(--ink); }
+.demo-shell :is(.financial-tabs,.table-wrap,.data-table td,.comparison,.cost-layer,.maintenance-row,.fact-row) { border-color: var(--line); }
+.demo-shell :is(.data-table th,.data-table tfoot td,.donut > span,.chart-toggle button) { background: var(--surface2); color: var(--muted); }
+.demo-shell .data-table .doc-link { color: var(--ink); border-color: var(--muted); }
+.demo-shell :is(.financial-tabs button,.distance-options button,.bar-month,.bar-value,.document-item small,.maintenance-row p) { color: var(--muted); }
+.demo-shell :is(.financial-tabs button[aria-pressed=true],.distance-options button[aria-pressed=true]) { color: var(--gold); border-color: var(--gold); }
+.demo-shell .chart-toggle button[aria-pressed=true] { background: var(--portal-soft-accent); color: var(--gold); }
+.demo-shell .chart-column .chart-bar { background: var(--muted); }
+.demo-shell .chart-column.selected .chart-bar { background: var(--gold); }
+.demo-shell .bar-track { background: var(--surface2); }
+.demo-shell .bar-fill { background: var(--muted); }
+.demo-shell .comparison-row:first-of-type .bar-fill { background: var(--gold); }
+.demo-shell .sim-result .result-big { color: var(--gold); }
+.demo-shell .sim-result p { color: var(--muted); }
+.demo-shell :is(.demo-hint,.fact-row) { background: var(--surface); color: var(--muted); border-color: var(--line); }
+.demo-shell .route-line span:before,.demo-shell .route-line span:after { background: var(--line); }
+.demo-shell .portal-heading h3 { font-weight: 600; }
+.demo-shell .distance-options button { border-color: var(--line); }
+@media (max-width:1100px) {
+  .demo-shell { grid-template-columns: 190px minmax(0,1fr); }
+  .demo-shell .portal-brand { font-size: 13px; }
+  .demo-shell .portal-sidebar nav button { font-size: 12px; gap: 9px; }
+  .demo-shell .portal-dashboard > .panel { padding: 20px; }
+}
+@media (max-width:960px) {
+  .demo-shell { display: block; }
+  .demo-shell .portal-sidebar { padding: 16px 16px 0; }
+  .demo-shell .portal-sidebar nav { flex-direction: row; margin-top: 12px; overflow: auto; }
+  .demo-shell .portal-sidebar nav button { border-radius: 6px 6px 0 0; white-space: nowrap; }
+  .demo-shell .portal-sidebar nav button.active::after { right: 10px; left: 10px; bottom: 0; width: auto; height: 2px; }
+  .demo-shell .sidebar-caption,.demo-shell .demo-person { display: none; }
+}
+@media (max-width:700px) {
+  .demo-shell #demo-content { padding: 18px 16px; }
+  .demo-shell .portal-top { padding: 12px 16px; }
+  .demo-shell .portal-welcome { margin: -18px -16px 20px; padding: 28px 20px; min-height: 260px; }
+  .demo-shell #demo-content .portal-welcome h3 { font-size: 28px; margin-bottom: 26px; }
+  .demo-shell .welcome-aircraft { font-size: 17px; }
+  .demo-shell .welcome-chip { right: 20px; bottom: 20px; }
+  .demo-shell .portal-sidebar nav button { font-size: 11px; padding: 12px 10px; }
+  .demo-shell .portal-sidebar nav button > span { display: inline-block; }
+  .demo-shell .portal-dashboard { grid-template-columns: 1fr; gap: 14px; }
+  .demo-shell .portal-dashboard > .panel { min-height: 180px; }
+  .demo-shell .dashboard-amount { font-size: 28px; }
+  .demo-shell .stat-card:last-child { display: block; }
+  .demo-shell .stat-card:last-child > .stat-number { margin-top: 12px; white-space: normal; }
+}

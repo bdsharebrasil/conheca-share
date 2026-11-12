@@ -19,6 +19,7 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "stylesheet", href: "/site.css" },
+      { rel: "stylesheet", href: "/portal-demo.css" },
       { rel: "canonical", href: "https://conheca.share-brasil.com/" },
     ],
   }),
