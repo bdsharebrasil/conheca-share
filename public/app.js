@@ -203,3 +203,13 @@ if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
  animateScreen($('.hero-content'));
 }
 
+
+document.addEventListener('DOMContentLoaded',()=>{
+ const ring=document.querySelector('.share-ring');
+ if(ring){
+  const ringObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('is-visible');});},{threshold:0.4});
+  ringObserver.observe(ring);
+ }
+ const firstTab=document.getElementById('service-tab-0');
+ if(firstTab)setTimeout(()=>firstTab.click(),150);
+});
