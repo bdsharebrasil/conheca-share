@@ -87,6 +87,31 @@
 .demo-shell .route-line span:before,.demo-shell .route-line span:after { background: var(--line); }
 .demo-shell .portal-heading h3 { font-weight: 600; }
 .demo-shell .distance-options button { border-color: var(--line); }
+.demo-shell .travel-reports > .panel-title { gap: 12px; }
+.demo-shell .travel-reports .panel-title p { margin-top: 7px; }
+.demo-shell .travel-report { margin-top: 14px; padding: 0; }
+.demo-shell .travel-report-summary { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px; cursor: pointer; list-style: none; }
+.demo-shell .travel-report-summary::-webkit-details-marker { display: none; }
+.demo-shell .travel-report-summary small { display: block; margin-top: 6px; color: var(--muted); line-height: 1.6; }
+.demo-shell .travel-report-amount { flex-shrink: 0; text-align: right; }
+.demo-shell .travel-report-summary:hover { background: var(--surface2); border-radius: 8px; }
+.demo-shell .travel-report-summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.demo-shell .travel-report[open] .travel-report-amount small span { display: inline-block; transform: rotate(180deg); }
+.demo-shell .travel-report-body { padding: 20px 18px; border-top: 1px solid var(--line); }
+.demo-shell .travel-report-info { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px 24px; margin: 22px 0; }
+.demo-shell .travel-report-info dt { color: var(--muted); font-size: 10px; margin-bottom: 5px; }
+.demo-shell .travel-report-info dd { margin: 0; font-size: 12px; overflow-wrap: anywhere; }
+.demo-shell .travel-report-body .table-wrap { margin-top: 12px; }
+.demo-shell .travel-report-total { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; font-size: 12px; }
+.demo-shell .travel-report-note { font-size: 10px; line-height: 1.8; margin-top: 16px; }
+@media (max-width:700px) {
+  .demo-shell .travel-report-summary { align-items: flex-start; flex-direction: column; gap: 10px; padding: 16px; }
+  .demo-shell .travel-report-amount { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; text-align: left; }
+  .demo-shell .travel-report-amount small { margin-top: 0; }
+  .demo-shell .travel-report-body { padding: 18px 14px; }
+  .demo-shell .travel-report-info { grid-template-columns: 1fr; gap: 14px; }
+  .demo-shell .travel-report-body .panel-title { flex-wrap: wrap; gap: 12px; }
+}
 @media (max-width:1100px) {
   .demo-shell { grid-template-columns: 190px minmax(0,1fr); }
   .demo-shell .portal-brand { font-size: 13px; }
@@ -116,3 +141,4 @@
   .demo-shell .stat-card:last-child { display: block; }
   .demo-shell .stat-card:last-child > .stat-number { margin-top: 12px; white-space: normal; }
 }
+
