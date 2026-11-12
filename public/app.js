@@ -83,7 +83,7 @@ const services=[
  ['♙','Pessoas preparadas para a operação.','O acompanhamento da tripulação organiza os requisitos de qualificação e a rotina de quem vai voar.',['Controle de habilitações e exames','Treinamentos e seleção de tripulantes','Organização da equipe por operação']],
 ];
 function serviceMarkup(i){const [icon,title,copy,items]=services[i];return `<span class="service-icon" aria-hidden="true">${icon}</span><h3>${title}</h3><p>${copy}</p><ul>${items.map(x=>`<li>${x}</li>`).join('')}</ul>`;}
-function setService(i,focus=false){document.querySelectorAll('[data-service]').forEach(b=>{const active=Number(b.dataset.service)===i;b.setAttribute('aria-selected',active);b.tabIndex=active?0:-1;if(active&&focus)b.focus();});$('#service-panel').innerHTML=serviceMarkup(i);$('#service-panel').setAttribute('aria-labelledby',`service-tab-${i}`);animateScreen($('#service-panel'));}
+function setService(i,focus=false){document.querySelectorAll('[data-service]').forEach(b=>{const active=Number(b.dataset.service)===i;b.setAttribute('aria-selected',active);b.tabIndex=active?0:-1;if(active&&focus)b.focus();});const panel=$('#service-panel');panel.innerHTML=serviceMarkup(i);panel.setAttribute('aria-labelledby',`service-tab-${i}`);$(`.service-nav [data-service="${i}"]`).after(panel);animateScreen(panel);}
 setService(0);
 $('.service-nav').addEventListener('click',e=>{const b=e.target.closest('[data-service]');if(b)setService(Number(b.dataset.service));});
 $('.service-nav').addEventListener('keydown',e=>{const b=e.target.closest('[data-service]');if(!b)return;const i=Number(b.dataset.service);if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();setService(e.key==='Home'?0:e.key==='End'?4:(i+(e.key==='ArrowDown'?1:4))%5,true);}});
