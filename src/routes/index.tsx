@@ -5,7 +5,6 @@ import { SITE_BODY } from "@/site-body";
 const TITLE = "Conheça a Share Brasil · Seu tempo, em outra altitude";
 const DESC =
   "Conheça a gestão compartilhada e privada da Share Brasil. Explore o Portal do Cliente, agende um voo demonstrativo e simule custos sem cadastro.";
-const IMG = "https://conheca.share-brasil.com/assets/hero-aircraft.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,9 +15,7 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: "Gestão profissional de aeronaves. Conheça a Share e experimente a vida de cotista, sem cadastro." },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "pt_BR" },
-      { property: "og:image", content: IMG },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: IMG },
     ],
     links: [
       { rel: "stylesheet", href: "/site.css" },
