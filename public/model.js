@@ -43,7 +43,7 @@ export function ratearCentavos(total,pesos){
   for(let i=0;i<resto;i++) partes[ordem[i%ordem.length].i]++;
   return partes;
 }
-export const COTISTAS=['Pilot da Share','Cotista B','Cotista C'];
+export const COTISTAS=['Cliente da Share','Cotista B','Cotista C'];
 export const MESES=['Junho','Julho','Agosto','Setembro','Outubro','Novembro'];
 const FATORES=[.86,.93,1.04,.96,1.12,1];
 export function financeiro(mes=5){
