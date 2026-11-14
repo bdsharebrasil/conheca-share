@@ -29,4 +29,4 @@ Configuração completa, consultas e validação: [docs/quiz-d1.md](docs/quiz-d1
 
 Prompt de ativação para o ambiente com acesso ao D1: [docs/prompt-quiz-d1.md](docs/prompt-quiz-d1.md).
 
-A API requer publicação própria e binding do banco. A captura só fica ativa depois dessa configuração e da variável `VITE_QUIZ_API_URL` no site (ou rota equivalente no mesmo domínio).
+O quiz v3 usa o backend existente `api.share-brasil.com`, com `SHARE_DB`. A captura exige aplicar a migração nova e configurar `QUIZ_HASH_SECRET` nesse Worker. O serviço separado é uma alternativa.

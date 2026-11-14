@@ -33,18 +33,20 @@ export function validarEnvio(body) {
     !respostasCompletas(body.respostas)
   )
     throw new Error("Atualize a página e revise as respostas do quiz.");
-  const c = body.contato;
-  if (!c || c.consentimento !== true)
-    throw new Error("É necessário autorizar o registro do perfil e contato.");
+  // Contato é opcional. Sem autorização, dados pessoais são descartados.
+  const informado = body.contato && typeof body.contato === "object" ? body.contato : {};
+  const c = informado.consentimento === true ? informado : {};
   const nome = texto(c.nome, 100),
     cidade = texto(c.cidade, 100),
     rotas = texto(c.rotas, 250);
   let telefone = typeof c.telefone === "string" ? c.telefone.replace(/\D/g, "") : "";
   if (telefone.length === 10 || telefone.length === 11) telefone = `55${telefone}`;
-  if (nome.length < 2 || cidade.length < 2 || !/^55[1-9]{2}[2-9][0-9]{7,8}$/.test(telefone))
-    throw new Error("Confira nome, cidade e WhatsApp com DDD.");
-  if (!["EXPLORANDO", "ATE_3_MESES", "ATE_6_MESES", "ESTE_ANO"].includes(c.momento))
-    throw new Error("Informe seu momento de compra.");
+  if ((nome && nome.length < 2) || (telefone && !/^55[1-9]{2}[2-9][0-9]{7,8}$/.test(telefone)))
+    throw new Error("Confira os dados opcionais que preencheu.");
+  const momento = c.momento || "EXPLORANDO";
+  if (!["EXPLORANDO", "ATE_3_MESES", "ATE_6_MESES", "ESTE_ANO"].includes(momento))
+    throw new Error("Momento de compra inválido.");
+  const consentimento = c.consentimento === true && !!(nome || telefone || cidade || rotas) ? 1 : 0;
   const respostas = Object.fromEntries(PERGUNTAS.map((p) => [p.id, body.respostas[p.id]]));
   const origem = {};
   for (const campo of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]) {
@@ -52,11 +54,12 @@ export function validarEnvio(body) {
   }
   return {
     chave_reenvio: body.chave_reenvio.toLowerCase(),
-    nome,
-    telefone,
-    cidade,
-    rotas,
-    momento: c.momento,
+    nome: nome || null,
+    telefone: telefone || null,
+    cidade: cidade || null,
+    rotas: rotas || null,
+    momento,
+    consentimento,
     respostas,
     origem,
     duracao_segundos: Number.isFinite(body.duracao_segundos)
@@ -149,17 +152,17 @@ export default {
         )
           return json({ erro: "Evento inválido." }, 400);
         const lead = await env.DB.prepare(
-          "SELECT id FROM leads_quiz WHERE id=? AND token_evento_hash=?",
+          "SELECT id FROM quiz_participacoes WHERE id=? AND token_evento_hash=?",
         )
           .bind(evento[1], await hash(body.token))
           .first();
         if (!lead) return json({ erro: "Registro não encontrado." }, 404);
         await env.DB.batch([
           env.DB.prepare(
-            "INSERT OR IGNORE INTO eventos_quiz (id,lead_id,tipo) VALUES (?,?,'WHATSAPP_CLICADO')",
+            "INSERT OR IGNORE INTO quiz_eventos (id,lead_id,tipo) VALUES (?,?,'WHATSAPP_CLICADO')",
           ).bind(crypto.randomUUID(), lead.id),
           env.DB.prepare(
-            "UPDATE leads_quiz SET whatsapp_clicado_em=COALESCE(whatsapp_clicado_em,CURRENT_TIMESTAMP),atualizado_em=CURRENT_TIMESTAMP WHERE id=?",
+            "UPDATE quiz_participacoes SET whatsapp_clicado_em=COALESCE(whatsapp_clicado_em,CURRENT_TIMESTAMP),atualizado_em=CURRENT_TIMESTAMP WHERE id=?",
           ).bind(lead.id),
         ]);
         return json({ registrado: true });
@@ -179,9 +182,9 @@ export default {
       const protocolo = `SH-${id.replace(/-/g, "").slice(0, 12).toUpperCase()}`;
       await env.DB.batch([
         env.DB.prepare(
-          `INSERT INTO leads_quiz
-          (id,protocolo,chave_reenvio,resumo_envio,nome,telefone,cidade,rotas,momento,respostas_json,resultado_json,aeronave_sugerida,aeronave_alternativa,versao_quiz,origem_json,duracao_segundos,consentimento,versao_consentimento,token_evento_hash)
-          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,'2026-11-v1',?) ON CONFLICT(chave_reenvio) DO NOTHING`,
+          `INSERT INTO quiz_participacoes
+          (id,protocolo,chave_reenvio,resumo_envio,nome,telefone,cidade,rotas,momento,respostas_json,resultado_json,aeronave_sugerida,aeronave_alternativa,versao_quiz,origem_json,duracao_segundos,consentimento,versao_consentimento,consentimento_em,token_evento_hash)
+          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'2026-11-v3',?,?) ON CONFLICT(chave_reenvio) DO NOTHING`,
         ).bind(
           id,
           protocolo,
@@ -199,15 +202,17 @@ export default {
           VERSAO_QUIZ,
           JSON.stringify(dados.origem),
           dados.duracao_segundos,
+          dados.consentimento,
+          dados.consentimento ? new Date().toISOString() : null,
           await hash(token),
         ),
         env.DB.prepare(
-          "INSERT OR IGNORE INTO eventos_quiz (id,lead_id,tipo) SELECT ?,id,'PERFIL_SALVO' FROM leads_quiz WHERE chave_reenvio=?",
+          "INSERT OR IGNORE INTO quiz_eventos (id,lead_id,tipo) SELECT ?,id,'PERFIL_SALVO' FROM quiz_participacoes WHERE chave_reenvio=?",
         ).bind(crypto.randomUUID(), chaveHash),
       ]);
       // Somente metadados do próprio envio; não há endpoint público de consulta de leads.
       const salvo = await env.DB.prepare(
-        "SELECT id,protocolo,resumo_envio,resultado_json FROM leads_quiz WHERE chave_reenvio=?",
+        "SELECT id,protocolo,resumo_envio,resultado_json FROM quiz_participacoes WHERE chave_reenvio=?",
       )
         .bind(chaveHash)
         .first();

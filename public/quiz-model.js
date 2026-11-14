@@ -1,6 +1,6 @@
 // Regras de triagem comercial, versão compartilhada pelo navegador e pelo Worker.
 // Não são dados homologados da frota. A Share deve validar configuração e missão.
-export const VERSAO_QUIZ = "2026-11-v2";
+export const VERSAO_QUIZ = "2026-11-v3";
 export const MOMENTOS = {
   EXPLORANDO: "Conhecendo as possibilidades",
   ATE_3_MESES: "Nos próximos 3 meses",
@@ -22,6 +22,7 @@ export const ORDEM_DESEMPATE = [
 export const AERONAVES = {
   cirrus: {
     nome: "Cirrus SR20",
+    modelo: "SR20",
     imagem: `${AERONAVES_IMAGENS_BASE_URL}/SR20.png`,
     tipo: "Monomotor a pistão",
     perfil: "Liberdade para estar mais perto",
@@ -41,6 +42,7 @@ export const AERONAVES = {
   },
   matrix: {
     nome: "Piper Matrix",
+    modelo: "PA-46R-350T",
     imagem: `${AERONAVES_IMAGENS_BASE_URL}/PA-46R-350T.png`,
     tipo: "Monomotor a pistão",
     perfil: "Mais espaço para seus planos",
@@ -60,6 +62,7 @@ export const AERONAVES = {
   },
   seneca: {
     nome: "Seneca V",
+    modelo: "PA-34-220T",
     imagem: `${AERONAVES_IMAGENS_BASE_URL}/SENECA-V-PA-34-220T.jpg`,
     tipo: "Bimotor a pistão",
     perfil: "Conexões que fazem seu dia render",
@@ -77,6 +80,7 @@ export const AERONAVES = {
   },
   cheyenne: {
     nome: "Cheyenne II",
+    modelo: "PA-31T",
     imagem: `${AERONAVES_IMAGENS_BASE_URL}/CHEYENNEII-PA-31T.jpeg`,
     tipo: "Bimotor turboélice · pressurizado",
     perfil: "Seu tempo ganha novas distâncias",
@@ -96,6 +100,7 @@ export const AERONAVES = {
   },
   citation: {
     nome: "Citation II",
+    modelo: "Cessna 550",
     imagem: `${AERONAVES_IMAGENS_BASE_URL}/c550.jpg`,
     tipo: "Bimotor a jato · pressurizado",
     perfil: "Mais destinos no mesmo dia",
@@ -116,6 +121,7 @@ export const AERONAVES = {
   },
   meridian: {
     nome: "Meridian / M500",
+    modelo: "PA-46-500TP",
     imagem: `${AERONAVES_IMAGENS_BASE_URL}/PA-46-500TP.jpg`,
     tipo: "Monomotor turboélice · pressurizado",
     perfil: "Alcance para a sua rotina",
@@ -135,13 +141,14 @@ export const AERONAVES = {
   },
   hawker400a: {
     nome: "Hawker Beechcraft 400A",
+    modelo: "Beechjet 400A",
     imagem: `${AERONAVES_IMAGENS_BASE_URL}/400A.png`,
     tipo: "Bimotor a jato · pressurizado",
     perfil: "Velocidade para conectar compromissos",
     familia: "jato",
     pressurizada: true,
     motores: 2,
-    limitePerfil: 6,
+    limitePerfil: 7,
     resumo: "Para quem busca a experiência de um jato executivo em rotas entre cidades.",
     destaques: [
       "Cabine pressurizada e configuração bimotora para comparar em viagens de negócios.",
@@ -215,14 +222,17 @@ export const PERGUNTAS = [
         cheyenne: 1,
       }),
       opcao("5-6", "5 a 6 passageiros", "Você precisa acomodar um grupo maior", {
-        meridian: 2,
         cheyenne: 4,
         citation: 3,
         hawker400a: 3,
       }),
+      opcao("7", "7 passageiros", "Você costuma viajar com sete passageiros", {
+        citation: 4,
+        hawker400a: 4,
+      }),
       opcao(
-        "7+",
-        "7 passageiros ou mais",
+        "8+",
+        "8 passageiros ou mais",
         "Seu grupo pede uma avaliação específica de assentos",
         {},
       ),
@@ -252,14 +262,14 @@ export const PERGUNTAS = [
         "longa",
         "Entre regiões do Brasil",
         "Você quer conectar diferentes regiões",
-        { matrix: 1, meridian: 1, cheyenne: 3, citation: 4, hawker400a: 4 },
+        { matrix: 1, meridian: 1, cheyenne: 3, citation: 5, hawker400a: 4 },
         "Destinos mais distantes e viagens de negócios",
       ),
       opcao(
         "muito-longa",
         "Longas distâncias, com poucas paradas",
         "Você valoriza autonomia e menos escalas",
-        { meridian: 1, cheyenne: 1, citation: 5, hawker400a: 5 },
+        { meridian: 1, cheyenne: 1, citation: 6, hawker400a: 4 },
         "A equipe vai estudar as rotas e eventuais escalas",
       ),
     ],
@@ -338,10 +348,10 @@ export const PERGUNTAS = [
     opcoes: [
       opcao("tempo", "Ganhar o máximo de tempo", "Agilidade é sua prioridade", {
         matrix: 1,
-        meridian: 1,
+        meridian: 3,
         cheyenne: 3,
-        citation: 5,
-        hawker400a: 5,
+        citation: 4,
+        hawker400a: 6,
       }),
       opcao(
         "equilibrio",
@@ -364,7 +374,7 @@ export const PERGUNTAS = [
     ajuda:
       "Cabine pressurizada é um dos fatores para comparar as opções. O conforto também depende da missão e das condições do voo.",
     opcoes: [
-      opcao("sim", "Quero uma cabine pressurizada", "Você valoriza cabine pressurizada", {
+      opcao("sim", "Cabine pressurizada é essencial", "Você precisa de cabine pressurizada", {
         meridian: 5,
         cheyenne: 4,
         citation: 4,
@@ -389,7 +399,7 @@ export const PERGUNTAS = [
         "dois-motores",
         "Prefiro uma aeronave com dois motores",
         "Você prefere a configuração bimotora",
-        { seneca: 4, meridian: 1, cheyenne: 3, citation: 2, hawker400a: 2 },
+        { seneca: 4, cheyenne: 4, citation: 3, hawker400a: 3 },
       ),
       opcao(
         "caps",
@@ -428,12 +438,12 @@ export function recomendar(respostas) {
       if (v > 0) contribuicoes[id].push({ valor: v, texto: o.resumo });
     }
   }
-  const grupo = { "1-2": 2, "3-4": 4, "5-6": 6, "7+": 8 }[respostas.pax];
+  const grupo = { "1-2": 2, "3-4": 4, "5-6": 6, 7: 7, "8+": 8 }[respostas.pax];
   const ranking = ORDEM_DESEMPATE.filter(
     (id) =>
       AERONAVES[id].limitePerfil >= grupo &&
-      !(id === "citation" && ["terra", "misto"].includes(respostas.pista)) &&
-      !(id === "hawker400a" && ["terra", "misto"].includes(respostas.pista)),
+      !(AERONAVES[id].familia === "jato" && ["terra", "misto"].includes(respostas.pista)) &&
+      (respostas.conforto !== "sim" || AERONAVES[id].pressurizada),
   )
     .sort(
       (a, b) => pontos[b] - pontos[a] || ORDEM_DESEMPATE.indexOf(a) - ORDEM_DESEMPATE.indexOf(b),
@@ -461,7 +471,7 @@ export function recomendar(respostas) {
     );
   if (!principal)
     avisos.push(
-      "O tamanho do grupo precisa de uma avaliação personalizada. Nenhuma opção foi indicada automaticamente.",
+      "O conjunto de passageiros, cabine e pistas precisa de uma avaliação personalizada. Nenhuma opção foi indicada automaticamente.",
     );
   return {
     principal,
