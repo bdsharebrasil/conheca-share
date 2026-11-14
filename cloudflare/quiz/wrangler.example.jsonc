@@ -1,0 +1,19 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "share-quiz-leads",
+  "main": "worker.js",
+  "compatibility_date": "2026-11-14",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "SUBSTITUA_PELO_SEU_BANCO",
+      "database_id": "SUBSTITUA_PELO_ID_DO_D1",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "vars": {
+    "ORIGENS_PERMITIDAS": "https://conheca.share-brasil.com",
+  },
+  "triggers": { "crons": ["15 6 * * *"] },
+  // Defina QUIZ_HASH_SECRET via `wrangler secret put`, nunca no arquivo.
+}
