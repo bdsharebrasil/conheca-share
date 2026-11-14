@@ -1,0 +1,52 @@
+/* Cor única para ações em toda a apresentação, portal e quiz. */
+:root {
+  --action: #c1ec42;
+  --action-ink: #14232c;
+}
+.demo-shell {
+  --gold: var(--action);
+  --booking-primary: var(--action);
+}
+:root :is(.button, .booking-submit, .booking-swap, .icon-button, button.quiet),
+:root .demo-shell .mini-button,
+:root #quiz-root button[data-acao],
+:root #quiz-root button[type="submit"] {
+  background: var(--action);
+  color: var(--action-ink);
+  border-color: var(--action);
+}
+:root :is(.button, .booking-submit, .booking-swap, .icon-button, button.quiet):hover,
+:root .demo-shell .mini-button:hover,
+:root #quiz-root button[data-acao]:hover,
+:root #quiz-root button[type="submit"]:hover {
+  background: var(--action);
+  color: var(--action-ink);
+  border-color: var(--action);
+}
+:root button.quiet,
+:root #quiz-root button.quiet {
+  border-radius: 7px;
+  padding: 10px 14px;
+}
+:root #quiz-root .quiz-save-status button {
+  background: var(--action);
+  color: var(--action-ink);
+  border-radius: 7px;
+  text-decoration: none;
+  padding: 10px 14px;
+}
+:root :is(button, a.button):focus-visible {
+  outline-color: var(--action);
+}
+/* Navegação e seletores mantêm seus estados, usando a mesma cor de ação. */
+:root :is(.service-nav button[aria-selected="true"], .booking-tabs button.active),
+:root
+  .demo-shell
+  :is(
+    .doc-link,
+    .distance-options button[aria-pressed="true"],
+    .financial-tabs button[aria-pressed="true"]
+  ) {
+  color: var(--action);
+  border-color: var(--action);
+}
