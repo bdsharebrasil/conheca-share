@@ -54,7 +54,9 @@ function Index() {
     quiz.onload = () =>
       document.dispatchEvent(
         new CustomEvent("share:quiz:iniciar", {
-          detail: { apiBase: import.meta.env["VITE_QUIZ_API_URL"] || "" },
+          detail: {
+            apiBase: import.meta.env["VITE_QUIZ_API_URL"] || "https://api.share-brasil.com",
+          },
         }),
       );
     quiz.onerror = () => {

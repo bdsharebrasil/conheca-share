@@ -179,6 +179,7 @@ export function iniciarQuiz(root, apiBase = "") {
               chave_reenvio: chave,
               versao: VERSAO_QUIZ,
               respostas: { ...respostas },
+              resultado: recomendar(respostas),
               contato: { ...contato },
               origem,
               duracao_segundos: Math.min(86400, Math.floor((Date.now() - inicio) / 1000)),
