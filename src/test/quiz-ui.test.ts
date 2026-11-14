@@ -29,6 +29,9 @@ function iniciarComContato() {
   fireEvent.input(within(root).getByLabelText("Seu nome (opcional)"), {
     target: { value: "Pessoa Teste" },
   });
+  fireEvent.input(within(root).getByLabelText("Sua cidade (opcional)"), {
+    target: { value: "Cuiabá" },
+  });
   fireEvent.input(within(root).getByLabelText("WhatsApp com DDD (opcional)"), {
     target: { value: "(65) 99999-1234" },
   });
@@ -73,7 +76,7 @@ describe("Jornada e captura opcional", () => {
     const payload = JSON.parse(fetchMock.mock.calls[0]![1].body);
     expect(payload.contato.nome).toBe("Pessoa Teste");
     expect(payload.respostas).toEqual(respostas);
-    expect(payload.contato.cidade).toBe("Não informado");
+    expect(payload.contato.cidade).toBe("Cuiabá");
   });
   it("mostra resultado se a gravação opcional falhar e permite repetir", async () => {
     const fetchMock = vi
