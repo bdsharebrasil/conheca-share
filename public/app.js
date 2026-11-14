@@ -124,7 +124,6 @@ const services=[
 ];
 function serviceMarkup(i){const [icon,title,copy,items]=services[i];return `<span class="service-icon" aria-hidden="true">${icon}</span><h3>${title}</h3><p>${copy}</p><ul>${items.map(x=>`<li>${x}</li>`).join('')}</ul>`;}
 function setService(i,focus=false){document.querySelectorAll('[data-service]').forEach(b=>{const active=Number(b.dataset.service)===i;b.setAttribute('aria-selected',active);b.tabIndex=active?0:-1;if(active&&focus)b.focus();});const panel=$('#service-panel');panel.hidden=false;panel.innerHTML=serviceMarkup(i);panel.setAttribute('aria-labelledby',`service-tab-${i}`);$(`.service-nav [data-service="${i}"]`).after(panel);animateScreen(panel);}
-setService(0);
 function closeService(){document.querySelectorAll('[data-service]').forEach(b=>b.setAttribute('aria-selected','false'));$('#service-panel').hidden=true;}
 $('.service-nav').addEventListener('click',e=>{const b=e.target.closest('[data-service]');if(!b)return;const i=Number(b.dataset.service);if(b.getAttribute('aria-selected')==='true'&&!$('#service-panel').hidden)closeService();else setService(i);});
 $('.service-nav').addEventListener('keydown',e=>{const b=e.target.closest('[data-service]');if(!b)return;const i=Number(b.dataset.service);if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();setService(e.key==='Home'?0:e.key==='End'?4:(i+(e.key==='ArrowDown'?1:4))%5,true);}});
@@ -210,6 +209,4 @@ document.addEventListener('DOMContentLoaded',()=>{
   const ringObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('is-visible');});},{threshold:0.4});
   ringObserver.observe(ring);
  }
- const firstTab=document.getElementById('service-tab-0');
- if(firstTab)setTimeout(()=>firstTab.click(),150);
 });
