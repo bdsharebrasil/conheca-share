@@ -47,6 +47,12 @@
   text-decoration: none;
   padding: 10px 14px;
 }
+:root .contact-card label:has(input[value="ser cotista"]:checked) {
+  border-color: rgba(193, 236, 66, 1);
+}
+:root .contact-card label:has(input[value="ser cotista"]) span {
+  color: rgba(193, 236, 66, 1);
+}
 :root :is(button, a.button):focus-visible {
   outline-color: var(--action);
 }
