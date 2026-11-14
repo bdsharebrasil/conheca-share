@@ -18,21 +18,22 @@ const respostas = {
 function clicar(nome: string) {
   fireEvent.click(within(root).getByRole("button", { name: nome }));
 }
-function preencher() {
-  clicar("Descobrir minha aeronave");
+function preencherRespostas() {
   for (const [i, [nome, valor]] of Object.entries(respostas).entries()) {
     const radio = root.querySelector(`input[name="${nome}"][value="${valor}"]`)!;
     fireEvent.click(radio);
     clicar(i === 7 ? "Finalizar meu perfil" : "Continuar");
   }
-  fireEvent.input(within(root).getByLabelText("Seu nome *"), { target: { value: "Pessoa Teste" } });
-  fireEvent.input(within(root).getByLabelText("WhatsApp com DDD *"), {
+}
+function iniciarComContato() {
+  fireEvent.input(within(root).getByLabelText("Seu nome (opcional)"), {
+    target: { value: "Pessoa Teste" },
+  });
+  fireEvent.input(within(root).getByLabelText("WhatsApp com DDD (opcional)"), {
     target: { value: "(65) 99999-1234" },
   });
-  fireEvent.input(within(root).getByLabelText("Sua cidade / base de partida *"), {
-    target: { value: "Cuiabá" },
-  });
   fireEvent.click(within(root).getByRole("checkbox"));
+  fireEvent.submit(root.querySelector("form")!);
 }
 const salvo = () => ({
   id: crypto.randomUUID(),
@@ -50,41 +51,46 @@ afterEach(() => {
   limpar();
   vi.unstubAllGlobals();
 });
-describe("Jornada e confirmação de captura", () => {
-  it("salva ao enviar o formulário, antes do clique no WhatsApp", async () => {
+describe("Jornada e captura opcional", () => {
+  it("inicia sem contato e mostra o resultado e a foto sem chamar a API", () => {
+    expect(within(root).getByLabelText("Seu nome (opcional)")).toBeTruthy();
+    fireEvent.submit(root.querySelector("form")!);
+    preencherRespostas();
+    expect(root.textContent).toContain("Seu resultado está pronto");
+    expect(root.querySelector(".quiz-aircraft-photo img")?.getAttribute("src")).toBe(
+      "/assets/hero-aircraft.jpg",
+    );
+  });
+  it("salva no D1 somente depois do consentimento e do término do quiz", async () => {
     const fetchMock = vi
       .fn()
       .mockResolvedValue(new Response(JSON.stringify(salvo()), { status: 201 }));
     vi.stubGlobal("fetch", fetchMock);
-    preencher();
-    expect(fetchMock).not.toHaveBeenCalled();
-    fireEvent.submit(root.querySelector("form")!);
+    iniciarComContato();
+    preencherRespostas();
     await waitFor(() => expect(root.textContent).toContain("Perfil registrado"));
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const payload = JSON.parse(fetchMock.mock.calls[0]![1].body);
     expect(payload.contato.nome).toBe("Pessoa Teste");
     expect(payload.respostas).toEqual(respostas);
-    const link = root.querySelector<HTMLAnchorElement>("#quiz-whatsapp")!;
-    expect(new URL(link.href).searchParams.get("text")).toContain("Referência: SH-TESTE");
-    expect(localStorage.length).toBe(0);
+    expect(payload.contato.cidade).toBe("Não informado");
   });
-  it("mostra resultado com aviso em falha e repete o mesmo envio na tentativa posterior", async () => {
+  it("mostra resultado se a gravação opcional falhar e permite repetir", async () => {
     const fetchMock = vi
       .fn()
       .mockRejectedValueOnce(new TypeError("Failed to fetch"))
       .mockResolvedValueOnce(new Response(JSON.stringify(salvo()), { status: 201 }));
     vi.stubGlobal("fetch", fetchMock);
-    preencher();
-    fireEvent.submit(root.querySelector("form")!);
-    await waitFor(() => expect(root.textContent).toContain("ainda não foi salvo"));
+    iniciarComContato();
+    preencherRespostas();
+    await waitFor(() => expect(root.textContent).toContain("registro opcional não foi concluído"));
     expect(root.querySelector("#quiz-whatsapp")).toBeTruthy();
-    expect(root.textContent).not.toContain("Perfil registrado");
     clicar("Tentar salvar novamente");
     await waitFor(() => expect(root.textContent).toContain("Perfil registrado"));
     expect(fetchMock.mock.calls[1]![1].body).toBe(fetchMock.mock.calls[0]![1].body);
   });
   it("revisa preservando respostas e remove listeners na desmontagem", () => {
-    clicar("Descobrir minha aeronave");
+    fireEvent.submit(root.querySelector("form")!);
     fireEvent.click(root.querySelector('input[value="familia"]')!);
     clicar("Continuar");
     clicar("← Voltar");
@@ -94,7 +100,7 @@ describe("Jornada e confirmação de captura", () => {
     clicar("Continuar");
     expect(root.innerHTML).toBe(anterior);
     limpar = iniciarQuiz(root);
-    clicar("Descobrir minha aeronave");
+    fireEvent.submit(root.querySelector("form")!);
     expect(root.textContent).toContain("1 de 8 perguntas");
   });
 });

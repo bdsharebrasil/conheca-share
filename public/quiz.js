@@ -40,9 +40,7 @@ export function iniciarQuiz(root, apiBase = "") {
         ? abertura()
         : etapa < total
           ? pergunta()
-          : etapa === total
-            ? formulario()
-            : resultado();
+          : resultado();
     if (focar) {
       root.querySelector("[data-foco]")?.focus({ preventScroll: true });
       if (root.getBoundingClientRect().top < 80)
@@ -55,7 +53,7 @@ export function iniciarQuiz(root, apiBase = "") {
     }
   }
   function abertura() {
-    return `<div class="quiz-intro"><div class="quiz-intro-copy"><span class="quiz-pill">SEU PRÓXIMO CAPÍTULO</span><h3 data-foco tabindex="-1">Sua rotina tem um destino.<br><em>Vamos encontrar suas asas.</em></h3><p>Da fazenda aos negócios, da família aos novos planos. Descubra qual perfil de aeronave merece a sua atenção.</p><div class="quiz-intro-facts"><span><strong>8</strong> perguntas rápidas</span><span><strong>5</strong> perfis de aeronave</span><span><strong>Seu</strong> resultado explicado</span></div><button class="button primary" type="button" data-acao="comecar">Descobrir minha aeronave ${seta}</button><p class="quiz-note">Cerca de 2 minutos. Ao final, informe seu contato para registrar o perfil e conversar com a Share.</p></div><div class="quiz-intro-art" aria-hidden="true"><div class="quiz-radar"></div><span class="quiz-art-label">O PRÓXIMO DESTINO É SEU</span><span class="quiz-art-plane">${aviao}</span></div></div>`;
+    return `<div class="quiz-intro"><div class="quiz-intro-copy"><span class="quiz-pill">SEU PRÓXIMO CAPÍTULO</span><h3 data-foco tabindex="-1">Sua rotina tem um destino.<br><em>Vamos encontrar suas asas.</em></h3><p>Da fazenda aos negócios, da família aos novos planos. Descubra qual perfil de aeronave merece a sua atenção.</p><div class="quiz-intro-facts"><span><strong>8</strong> perguntas rápidas</span><span><strong>5</strong> perfis de aeronave</span><span><strong>Seu</strong> resultado explicado</span></div><form id="quiz-start" class="quiz-start-form"><div class="quiz-form-grid">${campo("nome", "Seu nome (opcional)", "text", 'maxlength="100" autocomplete="name" placeholder="Como podemos chamar você?"')}${campo("telefone", "WhatsApp com DDD (opcional)", "tel", 'maxlength="22" autocomplete="tel" placeholder="(65) 99999-9999"')}</div><label class="quiz-consent quiz-start-consent"><input name="consentimento" type="checkbox"><span>Autorizo a Share Brasil a salvar meu nome, WhatsApp e respostas do quiz para preparar meu perfil e entrar em contato sobre cotas. Opcional.</span></label><button class="button primary" type="submit">Começar o teste ${seta}</button></form><p class="quiz-note">Cerca de 2 minutos. Nome e WhatsApp são opcionais — você pode começar sem preencher nada.</p></div><div class="quiz-intro-art" aria-hidden="true"><div class="quiz-radar"></div><span class="quiz-art-label">O PRÓXIMO DESTINO É SEU</span><span class="quiz-art-plane">${aviao}</span></div></div>`;
   }
   function progresso(titulo, numero) {
     return `<div class="quiz-topline"><a class="quiz-wordmark" href="#aeronave">SHARE <span>/ SEU PERFIL DE VOO</span></a><span>${esc(titulo)}</span></div><div class="quiz-progress" role="progressbar" aria-label="Etapas concluídas" aria-valuemin="0" aria-valuemax="${total + 1}" aria-valuenow="${numero}"><i style="width:${(numero / (total + 1)) * 100}%"></i></div>`;
@@ -67,20 +65,17 @@ export function iniciarQuiz(root, apiBase = "") {
   function campo(nome, label, tipo = "text", extra = "") {
     return `<label class="quiz-field">${label}<input name="${nome}" type="${tipo}" value="${esc(contato[nome] || "")}" ${extra}></label>`;
   }
-  function formulario() {
-    return `${progresso("ÚLTIMO PASSO", total)}<div class="quiz-contact-heading"><span class="quiz-pill">SEU PERFIL ESTÁ PRONTO</span><h3 data-foco tabindex="-1">A próxima viagem começa com você.</h3><p>Registre seu contato para ver a recomendação completa e receber uma análise de cotas para o seu perfil.</p></div><form id="quiz-contact"><div class="quiz-form-grid">${campo("nome", "Seu nome *", "text", 'required minlength="2" maxlength="100" autocomplete="name"')}${campo("telefone", "WhatsApp com DDD *", "tel", 'required maxlength="22" autocomplete="tel" placeholder="(65) 99999-9999"')}${campo("cidade", "Sua cidade / base de partida *", "text", 'required minlength="2" maxlength="100" autocomplete="address-level2"')}${campo("rotas", "Rotas que você quer fazer (opcional)", "text", 'maxlength="250" placeholder="Ex.: Cuiabá, fazenda, São Paulo"')}<label class="quiz-field quiz-full">Quando você gostaria de começar?<select name="momento"><option value="EXPLORANDO" ${contato.momento === "EXPLORANDO" ? "selected" : ""}>Estou conhecendo as possibilidades</option><option value="ATE_3_MESES" ${contato.momento === "ATE_3_MESES" ? "selected" : ""}>Nos próximos 3 meses</option><option value="ATE_6_MESES" ${contato.momento === "ATE_6_MESES" ? "selected" : ""}>Entre 3 e 6 meses</option><option value="ESTE_ANO" ${contato.momento === "ESTE_ANO" ? "selected" : ""}>Mais adiante</option></select></label></div><div class="quiz-honeypot" aria-hidden="true"><label>Site pessoal<input name="website" tabindex="-1" autocomplete="off"></label></div><label class="quiz-consent"><input name="consentimento" type="checkbox" required ${contato.consentimento ? "checked" : ""}><span>Autorizo a Share Brasil a salvar meu contato e minhas respostas para preparar meu perfil e entrar em contato sobre cotas.</span></label><p class="quiz-error" role="alert">${esc(erro)}</p><div class="quiz-nav"><button type="button" class="quiet" data-acao="voltar" ${salvando ? "disabled" : ""}>← Revisar respostas</button><button type="submit" class="button primary" ${salvando ? "disabled" : ""}>${salvando ? "Registrando seu perfil…" : "Ver minha aeronave"} ${seta}</button></div><p class="quiz-note">Seu perfil será registrado mesmo que você não abra o WhatsApp. Você decide se quer enviar a mensagem.</p></form>`;
-  }
   function resultado() {
     const r = recibo?.resultado || recomendar(respostas);
     const a = AERONAVES[r.principal],
       b = AERONAVES[r.segunda];
-    return `${progresso("PERFIL CONCLUÍDO", total + 1)}<div class="quiz-result"><div class="quiz-result-banner"><div><span class="quiz-pill">${a ? "SEU PERFIL COMBINA COM" : "UM PLANO TÃO ÚNICO QUANTO VOCÊ"}</span><h3 data-foco tabindex="-1">${esc(a?.nome || "Uma análise personalizada")}</h3><p class="quiz-type">${esc(a?.tipo || "Vamos estudar sua missão com a equipe Share")}</p><p class="quiz-result-tagline">${esc(a?.perfil || "Seu grupo merece uma solução sob medida.")}</p></div><span class="quiz-result-seal" aria-hidden="true">${aviao}<small>SEU PERFIL<br>DE VOO</small></span></div><p class="quiz-lead">${esc(a?.resumo || "As respostas pedem uma conversa mais detalhada sobre passageiros e destinos. Vamos avaliar as possibilidades com você.")}</p><div class="quiz-cols"><div><h4>Saiba por que</h4><ul class="quiz-list ok">${lista(r.motivos.length ? r.motivos : ["A quantidade de passageiros pede uma avaliação específica.", "Seu perfil completo já está organizado para a conversa."])}</ul>${a ? `<details class="quiz-aircraft-details"><summary>Conheça essa opção +</summary><ul class="quiz-list">${lista(a.destaques)}</ul></details>` : ""}</div><div><h4>Vamos avaliar juntos</h4><ul class="quiz-list warn">${lista([...r.avisos, ...(a?.considerar || [])])}</ul></div></div>${b ? `<div class="quiz-second"><span>VALE COMPARAR TAMBÉM</span><strong>${esc(b.nome)}</strong><p>${esc(b.resumo)}</p></div>` : ""}<details class="quiz-profile"><summary>Rever meu perfil completo <span aria-hidden="true">+</span></summary><ul>${descreverPerfil(
+    return `${progresso("PERFIL CONCLUÍDO", total)}<div class="quiz-result"><div class="quiz-result-banner"><div><span class="quiz-pill">${a ? "SEU PERFIL COMBINA COM" : "UM PLANO TÃO ÚNICO QUANTO VOCÊ"}</span><h3 data-foco tabindex="-1">${esc(a?.nome || "Uma análise personalizada")}</h3><p class="quiz-type">${esc(a?.tipo || "Vamos estudar sua missão com a equipe Share")}</p><p class="quiz-result-tagline">${esc(a?.perfil || "Seu grupo merece uma solução sob medida.")}</p></div><span class="quiz-result-seal" aria-hidden="true">${aviao}<small>SEU PERFIL<br>DE VOO</small></span></div>${a ? `<figure class="quiz-aircraft-photo"><img src="/assets/hero-aircraft.jpg" alt="Avião executivo — imagem ilustrativa do resultado" loading="lazy"><figcaption>Imagem ilustrativa · ${esc(a.nome)}</figcaption></figure>` : ""}<p class="quiz-lead">${esc(a?.resumo || "As respostas pedem uma conversa mais detalhada sobre passageiros e destinos. Vamos avaliar as possibilidades com você.")}</p><div class="quiz-cols"><div><h4>Saiba por que</h4><ul class="quiz-list ok">${lista(r.motivos.length ? r.motivos : ["A quantidade de passageiros pede uma avaliação específica.", "Seu perfil completo já está organizado para a conversa."])}</ul>${a ? `<details class="quiz-aircraft-details"><summary>Conheça essa opção +</summary><ul class="quiz-list">${lista(a.destaques)}</ul></details>` : ""}</div><div><h4>Vamos avaliar juntos</h4><ul class="quiz-list warn">${lista([...r.avisos, ...(a?.considerar || [])])}</ul></div></div>${b ? `<div class="quiz-second"><span>VALE COMPARAR TAMBÉM</span><strong>${esc(b.nome)}</strong><p>${esc(b.resumo)}</p></div>` : ""}<details class="quiz-profile"><summary>Rever meu perfil completo <span aria-hidden="true">+</span></summary><ul>${descreverPerfil(
       respostas,
     )
       .map((p) => `<li><span>${esc(p.titulo)}</span><strong>${esc(p.rotulo)}</strong></li>`)
       .join(
         "",
-      )}${contato.rotas ? `<li><span>Rotas</span><strong>${esc(contato.rotas)}</strong></li>` : ""}</ul></details><div class="quiz-save-status ${recibo ? "saved" : "pending"}" role="status">${recibo ? `✓ Perfil registrado · referência ${esc(recibo.protocolo)}` : `Seu resultado está pronto, mas o contato ainda não foi salvo. ${esc(erro)} <button type="button" data-acao="tentar" ${salvando ? "disabled" : ""}>${salvando ? "Salvando…" : "Tentar salvar novamente"}</button>`}</div><div class="quiz-actions"><a id="quiz-whatsapp" class="button primary" href="${esc(linkWhatsApp(respostas, r, contato, recibo?.protocolo))}" target="_blank" rel="noopener noreferrer">Quero conhecer as cotas para o meu perfil ${seta}</a><button type="button" class="quiet" data-acao="refazer" ${salvando ? "disabled" : ""}>Explorar outro perfil ↻</button></div><p class="quiz-note">Sugestão inicial, sujeita à avaliação da Share. Configuração, passageiros, bagagem, pistas, disponibilidade e custos precisam ser confirmados. O WhatsApp abre com seu perfil; a mensagem só é enviada por você.</p></div>`;
+      )}${contato.rotas ? `<li><span>Rotas</span><strong>${esc(contato.rotas)}</strong></li>` : ""}</ul></details><div class="quiz-save-status ${recibo ? "saved" : "pending"}" role="status">${recibo ? `✓ Perfil registrado · referência ${esc(recibo.protocolo)}` : contato.consentimento ? `Seu resultado está pronto; o registro opcional não foi concluído. ${esc(erro)} <button type="button" data-acao="tentar" ${salvando ? "disabled" : ""}>${salvando ? "Salvando…" : "Tentar salvar novamente"}</button>` : "Seu resultado está pronto. Nenhum dado pessoal foi enviado ou salvo."}</div><div class="quiz-actions"><a id="quiz-whatsapp" class="button primary" href="${esc(linkWhatsApp(respostas, r, contato, recibo?.protocolo))}" target="_blank" rel="noopener noreferrer">Quero conhecer as cotas para o meu perfil ${seta}</a><button type="button" class="quiet" data-acao="refazer" ${salvando ? "disabled" : ""}>Explorar outro perfil ↻</button></div><p class="quiz-note">Sugestão inicial, sujeita à avaliação da Share. Configuração, passageiros, bagagem, pistas, disponibilidade e custos precisam ser confirmados. O WhatsApp abre com seu perfil; a mensagem só é enviada por você.</p></div>`;
   }
   async function salvar() {
     if (salvando) return;
@@ -136,39 +131,25 @@ export function iniciarQuiz(root, apiBase = "") {
   root.addEventListener(
     "submit",
     (e) => {
-      if (e.target.id !== "quiz-contact") return;
+      if (e.target.id !== "quiz-start") return;
       e.preventDefault();
-      if (salvando) return;
       const f = new FormData(e.target);
       contato = {
-        nome: String(f.get("nome")).trim(),
-        telefone: String(f.get("telefone")).trim(),
-        cidade: String(f.get("cidade")).trim(),
-        rotas: String(f.get("rotas")).trim(),
-        momento: String(f.get("momento")),
+        nome: String(f.get("nome") || "").trim(),
+        telefone: String(f.get("telefone") || "").trim(),
+        cidade: "Não informado",
+        rotas: "",
+        momento: "EXPLORANDO",
         consentimento: f.get("consentimento") === "on",
       };
       const telefone = contato.telefone.replace(/\D/g, "");
-      if (
-        contato.nome.length < 2 ||
-        contato.cidade.length < 2 ||
-        !/^(?:55)?[1-9]{2}[2-9][0-9]{7,8}$/.test(telefone) ||
-        !contato.consentimento
-      ) {
-        erro = "Confira seu nome, cidade, WhatsApp com DDD e a autorização de contato.";
+      if (contato.consentimento && (contato.nome.length < 2 || !/^(?:55)?[1-9]{2}[2-9][0-9]{7,8}$/.test(telefone))) {
+        erro = "Para salvar e receber contato, informe nome e WhatsApp válido com DDD. Ou desmarque a autorização e faça o teste sem cadastro.";
         render();
         return;
       }
-      envio = {
-        chave_reenvio: chave,
-        versao: VERSAO_QUIZ,
-        respostas: { ...respostas },
-        contato: { ...contato },
-        origem,
-        duracao_segundos: Math.min(86400, Math.floor((Date.now() - inicio) / 1000)),
-        website: String(f.get("website") || ""),
-      };
-      salvar();
+      etapa = 0;
+      render(true);
     },
     { signal: abort.signal },
   );
@@ -193,6 +174,19 @@ export function iniciarQuiz(root, apiBase = "") {
         case "avancar":
           if (!respostas[PERGUNTAS[etapa].id]) return;
           etapa++;
+          if (etapa === total && contato.consentimento) {
+            envio = {
+              chave_reenvio: chave,
+              versao: VERSAO_QUIZ,
+              respostas: { ...respostas },
+              contato: { ...contato },
+              origem,
+              duracao_segundos: Math.min(86400, Math.floor((Date.now() - inicio) / 1000)),
+              website: "",
+            };
+            salvar();
+            return;
+          }
           break;
         case "voltar":
           etapa--;
