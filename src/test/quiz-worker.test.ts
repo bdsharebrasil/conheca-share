@@ -12,7 +12,9 @@ class Banco {
   sqlite = new DatabaseSync(":memory:");
   constructor() {
     this.sqlite.exec("PRAGMA foreign_keys=ON");
-    this.sqlite.exec(readFileSync("cloudflare/quiz/migrations/0001_leads_quiz.sql", "utf8"));
+    this.sqlite.exec(
+      readFileSync("cloudflare/quiz/migrations/0002_quiz_participacoes.sql", "utf8"),
+    );
   }
   prepare(sql: string) {
     const db = this.sqlite;
@@ -93,14 +95,63 @@ describe("Captura D1 do quiz", () => {
     const data = await res.json();
     expect(res.status).toBe(201);
     expect(data.resultado).toEqual(recomendar(respostas));
-    const row = env.DB.sqlite.prepare("SELECT * FROM leads_quiz").get();
+    const row = env.DB.sqlite.prepare("SELECT * FROM quiz_participacoes").get();
     expect(row.telefone).toBe("5565999991234");
     expect(row.status).toBe("NOVO");
     expect(row.whatsapp_clicado_em).toBeNull();
     expect(JSON.parse(row.origem_json)).toEqual({ utm_source: "teste" });
     expect(row.token_evento_hash).not.toBe(data.token_evento);
-    expect(env.DB.sqlite.prepare("SELECT tipo FROM eventos_quiz").get().tipo).toBe("PERFIL_SALVO");
+    expect(env.DB.sqlite.prepare("SELECT tipo FROM quiz_eventos").get().tipo).toBe("PERFIL_SALVO");
     expect(res.headers.get("Cache-Control")).toBe("no-store");
+  });
+  it("registra participação sem identificação e descarta contato sem autorização", async () => {
+    const body = {
+      ...envio(),
+      contato: {
+        nome: "Não salvar",
+        telefone: "(65) 99999-1234",
+        cidade: "Não salvar",
+        consentimento: false,
+      },
+    };
+    const res = await request(body);
+    expect(res.status).toBe(201);
+    const row = env.DB.sqlite
+      .prepare("SELECT nome,telefone,cidade,consentimento,consentimento_em FROM quiz_participacoes")
+      .get();
+    expect(row).toMatchObject({
+      nome: null,
+      telefone: null,
+      cidade: null,
+      consentimento: 0,
+      consentimento_em: null,
+    });
+  });
+  it("aceita contato autorizado parcial sem exigir cidade", async () => {
+    for (const contato of [
+      { nome: "Pessoa", consentimento: true },
+      { telefone: "(65) 99999-1234", consentimento: true },
+      {},
+    ]) {
+      expect((await request({ ...envio(), contato })).status).toBe(201);
+    }
+    expect(env.DB.sqlite.prepare("SELECT COUNT(*) n FROM quiz_participacoes").get().n).toBe(3);
+  });
+  it("aceita sete modelos e ignora o resultado fornecido pelo cliente", async () => {
+    const body = {
+      ...envio(),
+      respostas: {
+        ...respostas,
+        pax: "7",
+        distancia: "media",
+        prioridade: "tempo",
+        conforto: "sim",
+      },
+      resultado: { principal: "cirrus" },
+    };
+    const res = await request(body);
+    expect(res.status).toBe(201);
+    expect((await res.json()).resultado.principal).toBe("hawker400a");
   });
   it("reenvios e cliques repetidos não duplicam lead nem evento", async () => {
     const body = envio();
@@ -111,10 +162,11 @@ describe("Captura D1 do quiz", () => {
     const path = `/api/quiz/leads/${a.id}/eventos`;
     expect((await request(evento, { path })).status).toBe(200);
     await request(evento, { path });
-    expect(env.DB.sqlite.prepare("SELECT COUNT(*) n FROM leads_quiz").get().n).toBe(1);
-    expect(env.DB.sqlite.prepare("SELECT COUNT(*) n FROM eventos_quiz").get().n).toBe(2);
+    expect(env.DB.sqlite.prepare("SELECT COUNT(*) n FROM quiz_participacoes").get().n).toBe(1);
+    expect(env.DB.sqlite.prepare("SELECT COUNT(*) n FROM quiz_eventos").get().n).toBe(2);
     expect(
-      env.DB.sqlite.prepare("SELECT whatsapp_clicado_em FROM leads_quiz").get().whatsapp_clicado_em,
+      env.DB.sqlite.prepare("SELECT whatsapp_clicado_em FROM quiz_participacoes").get()
+        .whatsapp_clicado_em,
     ).toBeTruthy();
   });
   it("rejeita alteração de um envio existente", async () => {
@@ -122,16 +174,17 @@ describe("Captura D1 do quiz", () => {
     await request(body);
     body.contato.nome = "Outro Nome";
     expect((await request(body)).status).toBe(409);
-    expect(env.DB.sqlite.prepare("SELECT nome FROM leads_quiz").get().nome).toBe("Cliente Teste");
+    expect(env.DB.sqlite.prepare("SELECT nome FROM quiz_participacoes").get().nome).toBe(
+      "Cliente Teste",
+    );
   });
-  it("não grava sem consentimento, com respostas adulteradas ou armadilha preenchida", async () => {
+  it("não grava respostas adulteradas ou armadilha preenchida", async () => {
     for (const body of [
-      { ...envio(), contato: { ...envio().contato, consentimento: false } },
       { ...envio(), respostas: { ...respostas, pax: "999" } },
       { ...envio(), website: "spam" },
     ])
       expect((await request(body)).status).toBe(400);
-    expect(env.DB.sqlite.prepare("SELECT COUNT(*) n FROM leads_quiz").get().n).toBe(0);
+    expect(env.DB.sqlite.prepare("SELECT COUNT(*) n FROM quiz_participacoes").get().n).toBe(0);
   });
   it("valida origem e token, e não disponibiliza listagem pública", async () => {
     expect((await request(envio(), { origin: "https://outra.example.com" })).status).toBe(403);
@@ -172,7 +225,7 @@ describe("Captura D1 do quiz", () => {
     });
     await job;
     expect(env.DB.sqlite.prepare("SELECT COUNT(*) n FROM limites_quiz").get().n).toBe(0);
-    expect(env.DB.sqlite.prepare("SELECT COUNT(*) n FROM leads_quiz").get().n).toBe(1);
-    expect(env.DB.sqlite.prepare("SELECT COUNT(*) n FROM eventos_quiz").get().n).toBe(1);
+    expect(env.DB.sqlite.prepare("SELECT COUNT(*) n FROM quiz_participacoes").get().n).toBe(1);
+    expect(env.DB.sqlite.prepare("SELECT COUNT(*) n FROM quiz_eventos").get().n).toBe(1);
   });
 });

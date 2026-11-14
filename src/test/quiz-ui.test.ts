@@ -29,9 +29,6 @@ function iniciarComContato() {
   fireEvent.input(within(root).getByLabelText("Seu nome (opcional)"), {
     target: { value: "Pessoa Teste" },
   });
-  fireEvent.input(within(root).getByLabelText("Sua cidade (opcional)"), {
-    target: { value: "Cuiabá" },
-  });
   fireEvent.input(within(root).getByLabelText("WhatsApp com DDD (opcional)"), {
     target: { value: "(65) 99999-1234" },
   });
@@ -55,7 +52,11 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 describe("Jornada e captura opcional", () => {
-  it("inicia sem contato e mostra o resultado e a foto sem chamar a API", () => {
+  it("inicia sem contato e mostra o resultado com foto enquanto registra participação anônima", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(new Response(JSON.stringify(salvo()), { status: 201 }));
+    vi.stubGlobal("fetch", fetchMock);
     expect(within(root).getByLabelText("Seu nome (opcional)")).toBeTruthy();
     fireEvent.submit(root.querySelector("form")!);
     preencherRespostas();
@@ -64,6 +65,8 @@ describe("Jornada e captura opcional", () => {
     expect(root.querySelector(".quiz-aircraft-photo img")?.getAttribute("src")).toBe(
       "https://pub-f4fb8ab5edc0402a840f54b4988012c2.r2.dev/quiz/SR20.png",
     );
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    expect(JSON.parse(fetchMock.mock.calls[0]![1].body).contato).toEqual({});
   });
   it("salva no D1 somente depois do consentimento e do término do quiz", async () => {
     const fetchMock = vi
@@ -79,7 +82,7 @@ describe("Jornada e captura opcional", () => {
     const payload = JSON.parse(fetchMock.mock.calls[0]![1].body);
     expect(payload.contato.nome).toBe("Pessoa Teste");
     expect(payload.respostas).toEqual(respostas);
-    expect(payload.contato.cidade).toBe("Cuiabá");
+    expect(payload.contato.cidade).toBe("");
   });
   it("mostra resultado se a gravação opcional falhar e permite repetir", async () => {
     const fetchMock = vi
@@ -96,6 +99,25 @@ describe("Jornada e captura opcional", () => {
     expect(root.textContent).not.toContain("Perfil registrado");
     expect(root.querySelector(".quiz-profile")).toBeNull();
     expect(fetchMock.mock.calls[1]![1].body).toBe(fetchMock.mock.calls[0]![1].body);
+  });
+  it("permite pular dados inválidos e nunca troca a foto por outro modelo", () => {
+    fireEvent.input(within(root).getByLabelText("WhatsApp com DDD (opcional)"), {
+      target: { value: "123" },
+    });
+    fireEvent.click(within(root).getByRole("checkbox"));
+    fireEvent.submit(root.querySelector("form")!);
+    expect(root.textContent).toContain("Confira os dados");
+    clicar("Começar sem informar contato");
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(new Response(JSON.stringify(salvo()), { status: 201 })),
+    );
+    preencherRespostas();
+    const foto = root.querySelector<HTMLImageElement>("[data-aircraft-image]")!;
+    fireEvent.error(foto);
+    expect(foto.hidden).toBe(true);
+    expect(root.textContent).toContain("Foto indisponível");
+    expect(foto.src).not.toContain("hero-aircraft");
   });
   it("revisa preservando respostas e remove listeners na desmontagem", () => {
     fireEvent.submit(root.querySelector("form")!);

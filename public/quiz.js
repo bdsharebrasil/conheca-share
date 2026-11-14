@@ -1,10 +1,4 @@
-import {
-  PERGUNTAS,
-  AERONAVES,
-  VERSAO_QUIZ,
-  recomendar,
-  linkWhatsApp,
-} from "./quiz-model.js";
+import { PERGUNTAS, AERONAVES, VERSAO_QUIZ, recomendar, linkWhatsApp } from "./quiz-model.js";
 
 const esc = (v) =>
   String(v ?? "").replace(
@@ -34,12 +28,7 @@ export function iniciarQuiz(root, apiBase = "") {
     if (v) origem[k] = v.slice(0, 150);
   }
   function render(focar = false) {
-    root.innerHTML =
-      etapa < 0
-        ? abertura()
-        : etapa < total
-          ? pergunta()
-          : resultado();
+    root.innerHTML = etapa < 0 ? abertura() : etapa < total ? pergunta() : resultado();
     if (focar) {
       root.querySelector("[data-foco]")?.focus({ preventScroll: true });
       if (root.getBoundingClientRect().top < 80)
@@ -52,10 +41,10 @@ export function iniciarQuiz(root, apiBase = "") {
     }
   }
   function abertura() {
-    return `<div class="quiz-intro"><div class="quiz-intro-copy"><span class="quiz-pill">SEU PRÓXIMO CAPÍTULO</span><h3 data-foco tabindex="-1">Sua rotina tem um destino.<br><em>Vamos encontrar suas asas.</em></h3><p>Da fazenda aos negócios, da família aos novos planos. Descubra qual perfil de aeronave merece a sua atenção.</p><div class="quiz-intro-facts"><span><strong>8</strong> perguntas rápidas</span><span><strong>Seu</strong> resultado explicado</span></div><form id="quiz-start" class="quiz-start-form"><div class="quiz-form-grid">${campo("nome", "Seu nome (opcional)", "text", 'maxlength="100" autocomplete="name" placeholder="Como podemos chamar você?"')}${campo("cidade", "Sua cidade (opcional)", "text", 'maxlength="100" autocomplete="address-level2" placeholder="Ex.: Cuiabá"')}${campo("telefone", "WhatsApp com DDD (opcional)", "tel", 'maxlength="22" autocomplete="tel" placeholder="(65) 99999-9999"')}</div><label class="quiz-consent quiz-start-consent"><input name="consentimento" type="checkbox"><span>Autorizo a Share Brasil a salvar meu nome, cidade, WhatsApp e respostas do quiz para preparar meu perfil e entrar em contato sobre cotas. Opcional.</span></label><button class="button primary" type="submit">Começar o teste ${seta}</button></form></div><div class="quiz-intro-art" aria-hidden="true"><div class="quiz-radar"></div><span class="quiz-art-label">O PRÓXIMO DESTINO É SEU</span><span class="quiz-art-plane">${aviao}</span></div></div>`;
+    return `<div class="quiz-intro"><div class="quiz-intro-copy"><span class="quiz-pill">SEU PRÓXIMO CAPÍTULO</span><h3 data-foco tabindex="-1">Sua rotina tem um destino.<br><em>Vamos encontrar suas asas.</em></h3><p>Da fazenda aos negócios, da família aos novos planos. Descubra qual perfil de aeronave merece a sua atenção.</p><div class="quiz-intro-facts"><span><strong>8</strong> perguntas rápidas</span><span><strong>Seu</strong> resultado explicado</span></div><form id="quiz-start" class="quiz-start-form"><div class="quiz-form-grid">${campo("nome", "Seu nome (opcional)", "text", 'maxlength="100" autocomplete="name" placeholder="Como podemos chamar você?"')}${campo("telefone", "WhatsApp com DDD (opcional)", "tel", 'maxlength="22" autocomplete="tel" placeholder="(65) 99999-9999"')}</div><label class="quiz-consent quiz-start-consent"><input name="consentimento" type="checkbox"><span>Autorizo a Share Brasil a salvar meu nome, WhatsApp e respostas do quiz para preparar meu perfil e entrar em contato sobre cotas. Opcional.</span></label><p class="quiz-error" role="alert">${esc(erro)}</p><div class="quiz-start-actions"><button class="button primary" type="submit">Começar o teste ${seta}</button><button class="quiet" type="button" data-acao="sem-contato">Começar sem informar contato</button></div></form></div><div class="quiz-intro-art" aria-hidden="true"><div class="quiz-radar"></div><span class="quiz-art-label">O PRÓXIMO DESTINO É SEU</span><span class="quiz-art-plane">${aviao}</span></div></div>`;
   }
   function progresso(titulo, numero) {
-    return `<div class="quiz-topline"><a class="quiz-wordmark" href="#aeronave">SHARE <span>/ SEU PERFIL DE VOO</span></a><span>${esc(titulo)}</span></div><div class="quiz-progress" role="progressbar" aria-label="Etapas concluídas" aria-valuemin="0" aria-valuemax="${total + 1}" aria-valuenow="${numero}"><i style="width:${(numero / (total + 1)) * 100}%"></i></div>`;
+    return `<div class="quiz-topline"><a class="quiz-wordmark" href="#aeronave">SHARE <span>/ SEU PERFIL DE VOO</span></a><span>${esc(titulo)}</span></div><div class="quiz-progress" role="progressbar" aria-label="Etapas concluídas" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${numero}"><i style="width:${(numero / total) * 100}%"></i></div>`;
   }
   function pergunta() {
     const p = PERGUNTAS[etapa];
@@ -68,16 +57,17 @@ export function iniciarQuiz(root, apiBase = "") {
     const r = recibo?.resultado || recomendar(respostas);
     const a = AERONAVES[r.principal],
       b = AERONAVES[r.segunda];
-    const status = contato.consentimento && erro
-      ? `<div class="quiz-save-status pending" role="status">${esc(erro)} <button type="button" data-acao="tentar" ${salvando ? "disabled" : ""}>${salvando ? "Salvando…" : "Tentar salvar novamente"}</button></div>`
-      : "";
-    return `${progresso("PERFIL CONCLUÍDO", total)}<div class="quiz-result"><div class="quiz-result-banner"><div><span class="quiz-pill">${a ? "SEU PERFIL COMBINA COM" : "UM PLANO TÃO ÚNICO QUANTO VOCÊ"}</span><h3 data-foco tabindex="-1">${esc(a?.nome || "Uma análise personalizada")}</h3><p class="quiz-type">${esc(a?.tipo || "Vamos estudar sua missão com a equipe Share")}</p><p class="quiz-result-tagline">${esc(a?.perfil || "Seu grupo merece uma solução sob medida.")}</p></div><span class="quiz-result-seal" aria-hidden="true">${aviao}<small>SEU PERFIL<br>DE VOO</small></span></div>${a ? `<figure class="quiz-aircraft-photo"><img src="${esc(a.imagem)}" data-aircraft-image alt="${esc(a.nome)}" loading="lazy" onerror="this.onerror=null;this.src='/assets/hero-aircraft.jpg';this.alt='Avião executivo — imagem ilustrativa';"><figcaption>Imagem da aeronave · ${esc(a.nome)}</figcaption></figure>` : ""}<p class="quiz-lead">${esc(a?.resumo || "As respostas pedem uma conversa mais detalhada sobre passageiros e destinos. Vamos avaliar as possibilidades com você.")}</p><div class="quiz-cols"><div><h4>Saiba por que</h4><ul class="quiz-list ok">${lista(r.motivos.length ? r.motivos : ["A quantidade de passageiros pede uma avaliação específica.", "Seu perfil completo já está organizado para a conversa."])}</ul>${a ? `<details class="quiz-aircraft-details"><summary>Conheça essa opção +</summary><ul class="quiz-list">${lista(a.destaques)}</ul></details>` : ""}</div><div><h4>Vamos avaliar juntos</h4><ul class="quiz-list warn">${lista([...r.avisos, ...(a?.considerar || [])])}</ul></div></div>${b ? `<div class="quiz-second"><span>VALE COMPARAR TAMBÉM</span><strong>${esc(b.nome)}</strong><p>${esc(b.resumo)}</p></div>` : ""}${status}<div class="quiz-actions"><a id="quiz-whatsapp" class="button primary" href="${esc(linkWhatsApp(respostas, r, contato, recibo?.protocolo))}" target="_blank" rel="noopener noreferrer">Quero conhecer as cotas para o meu perfil ${seta}</a><button type="button" class="quiet" data-acao="refazer" ${salvando ? "disabled" : ""}>Explorar outro perfil ↻</button></div><p class="quiz-note">Sugestão inicial, sujeita à avaliação da Share. Configuração, passageiros, bagagem, pistas, disponibilidade e custos precisam ser confirmados. O WhatsApp abre com seu perfil; a mensagem só é enviada por você.</p></div>`;
+    const status =
+      contato.consentimento && erro
+        ? `<div class="quiz-save-status pending" role="status">${esc(erro)} <button type="button" data-acao="tentar" ${salvando ? "disabled" : ""}>${salvando ? "Salvando…" : "Tentar salvar novamente"}</button></div>`
+        : "";
+    return `${progresso("PERFIL CONCLUÍDO", total)}<div class="quiz-result"><div class="quiz-result-banner"><div><span class="quiz-pill">${a ? "SEU PERFIL COMBINA COM" : "UM PLANO TÃO ÚNICO QUANTO VOCÊ"}</span><h3 data-foco tabindex="-1">${esc(a?.nome || "Uma análise personalizada")}</h3><p class="quiz-type">${esc(a?.tipo || "Vamos estudar sua missão com a equipe Share")}</p><p class="quiz-result-tagline">${esc(a?.perfil || "Seu grupo merece uma solução sob medida.")}</p></div><span class="quiz-result-seal" aria-hidden="true">${aviao}<small>SEU PERFIL<br>DE VOO</small></span></div>${a ? `<figure class="quiz-aircraft-photo"><img src="${esc(a.imagem)}" data-aircraft-image alt="${esc(a.nome)}" loading="lazy"><figcaption>${esc(a.nome)} · Foto ilustrativa do modelo</figcaption></figure>` : ""}<p class="quiz-lead">${esc(a?.resumo || "As respostas pedem uma conversa mais detalhada sobre passageiros e destinos. Vamos avaliar as possibilidades com você.")}</p><div class="quiz-cols"><div><h4>Saiba por que</h4><ul class="quiz-list ok">${lista(r.motivos.length ? r.motivos : ["A quantidade de passageiros pede uma avaliação específica.", "Seu perfil completo já está organizado para a conversa."])}</ul>${a ? `<details class="quiz-aircraft-details"><summary>Conheça essa opção +</summary><ul class="quiz-list">${lista(a.destaques)}</ul></details>` : ""}</div><div><h4>Vamos avaliar juntos</h4><ul class="quiz-list warn">${lista([...r.avisos, ...(a?.considerar || [])])}</ul></div></div>${b ? `<div class="quiz-second"><span>VALE COMPARAR TAMBÉM</span><strong>${esc(b.nome)}</strong><p>${esc(b.resumo)}</p></div>` : ""}${status}<div class="quiz-actions"><a id="quiz-whatsapp" class="button primary" href="${esc(linkWhatsApp(respostas, r, contato, recibo?.protocolo))}" target="_blank" rel="noopener noreferrer">Quero conhecer as cotas para o meu perfil ${seta}</a><button type="button" class="quiet" data-acao="refazer" ${salvando ? "disabled" : ""}>Explorar outro perfil ↻</button></div><p class="quiz-note">Sugestão inicial, sujeita à avaliação da Share. Configuração, passageiros, bagagem, pistas, disponibilidade e custos precisam ser confirmados. O WhatsApp abre com seu perfil; a mensagem só é enviada por você.</p></div>`;
   }
   async function salvar() {
     if (salvando) return;
     salvando = true;
     erro = "";
-    render();
+    render(true);
     const requisicao = new AbortController();
     const cancelar = () => requisicao.abort();
     abort.signal.addEventListener("abort", cancelar, { once: true });
@@ -133,14 +123,18 @@ export function iniciarQuiz(root, apiBase = "") {
       contato = {
         nome: String(f.get("nome") || "").trim(),
         telefone: String(f.get("telefone") || "").trim(),
-        cidade: String(f.get("cidade") || "").trim() || "Não informado",
+        cidade: "",
         rotas: "",
         momento: "EXPLORANDO",
         consentimento: f.get("consentimento") === "on",
       };
       const telefone = contato.telefone.replace(/\D/g, "");
-      if (contato.consentimento && (contato.nome.length < 2 || !/^(?:55)?[1-9]{2}[2-9][0-9]{7,8}$/.test(telefone))) {
-        erro = "Para salvar e receber contato, informe nome e WhatsApp válido com DDD. Ou desmarque a autorização e faça o teste sem cadastro.";
+      if (
+        contato.consentimento &&
+        ((contato.nome && contato.nome.length < 2) ||
+          (telefone && !/^(?:55)?[1-9]{2}[2-9][0-9]{7,8}$/.test(telefone)))
+      ) {
+        erro = "Confira os dados que preencheu ou escolha começar sem informar contato.";
         render();
         return;
       }
@@ -164,19 +158,21 @@ export function iniciarQuiz(root, apiBase = "") {
       const btn = e.target.closest("[data-acao]");
       if (!btn || btn.disabled || salvando) return;
       switch (btn.dataset.acao) {
+        case "sem-contato":
+          contato = {};
+          erro = "";
         case "comecar":
           etapa = 0;
           break;
         case "avancar":
           if (!respostas[PERGUNTAS[etapa].id]) return;
           etapa++;
-          if (etapa === total && contato.consentimento) {
+          if (etapa === total) {
             envio = {
               chave_reenvio: chave,
               versao: VERSAO_QUIZ,
               respostas: { ...respostas },
-              resultado: recomendar(respostas),
-              contato: { ...contato },
+              contato: contato.consentimento ? { ...contato } : {},
               origem,
               duracao_segundos: Math.min(86400, Math.floor((Date.now() - inicio) / 1000)),
               website: "",
@@ -207,6 +203,18 @@ export function iniciarQuiz(root, apiBase = "") {
       render(true);
     },
     { signal: abort.signal },
+  );
+  // Uma falha nunca troca um SR20 ou jato por uma foto de outro modelo.
+  root.addEventListener(
+    "error",
+    (e) => {
+      const img = e.target;
+      if (!img.matches?.("[data-aircraft-image]")) return;
+      img.hidden = true;
+      const caption = img.closest("figure")?.querySelector("figcaption");
+      if (caption) caption.textContent = "Foto indisponível no momento.";
+    },
+    { capture: true, signal: abort.signal },
   );
   render();
   return () => abort.abort();
