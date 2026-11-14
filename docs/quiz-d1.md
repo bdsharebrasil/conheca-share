@@ -69,7 +69,7 @@ npx wrangler deploy --config cloudflare/quiz/wrangler.jsonc
 
 A API não tem rota pública de listagem, edição ou exclusão de leads. Consulte-os pelo console D1 ou por um painel interno autenticado já existente. O filtro de origem é uma camada de proteção do navegador; ele não substitui o limite de frequência contra clientes que simulam cabeçalhos. Se houver abuso, habilite também as proteções disponíveis no seu domínio Cloudflare.
 
-O Cron remove diariamente somente contadores técnicos vencidos. Contatos e eventos comerciais não são apagados automaticamente. A Share pode definir sua política de retenção e exclusão administrativa conforme a continuidade do atendimento; o aviso público já informa o canal para solicitações de acesso, correção e exclusão.
+O Cron remove diariamente somente contadores técnicos vencidos. Contatos e eventos comerciais não são apagados automaticamente. A Share pode definir sua política de retenção e exclusão administrativa conforme a continuidade do atendimento; a autorização de registro e contato permanece no formulário final do quiz.
 
 ## 4. Conectar o site
 
