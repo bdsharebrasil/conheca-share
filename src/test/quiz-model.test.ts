@@ -75,7 +75,7 @@ describe("Triagem de aeronaves", () => {
     expect(msg).toContain("análise personalizada");
     expect(msg).toContain("Rotas desejadas: A & B");
   });
-  it("mantém restrições em todas as combinações e permite os cinco perfis", () => {
+  it("mantém restrições em todas as combinações e permite os sete perfis", () => {
     const encontrados = new Set();
     let combinacoes = 0;
     function percorrer(i: number, respostas: Record<string, string>) {
@@ -99,6 +99,6 @@ describe("Triagem de aeronaves", () => {
     }
     percorrer(0, {});
     expect(combinacoes).toBe(23040);
-    expect(encontrados.size).toBe(5);
+    expect(encontrados.size).toBe(7);
   });
 });

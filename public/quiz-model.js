@@ -1,6 +1,6 @@
 // Regras de triagem comercial, versão compartilhada pelo navegador e pelo Worker.
 // Não são dados homologados da frota. A Share deve validar configuração e missão.
-export const VERSAO_QUIZ = "2026-11-v1";
+export const VERSAO_QUIZ = "2026-11-v2";
 export const MOMENTOS = {
   EXPLORANDO: "Conhecendo as possibilidades",
   ATE_3_MESES: "Nos próximos 3 meses",
@@ -8,10 +8,20 @@ export const MOMENTOS = {
   ESTE_ANO: "Mais adiante",
 };
 export const WHATSAPP_NUMERO = "5565981730641";
-export const ORDEM_DESEMPATE = ["cirrus", "matrix", "seneca", "cheyenne", "citation"];
+export const AERONAVES_IMAGENS_BASE_URL = "https://avatar-aeronaves.r2.dev/quiz";
+export const ORDEM_DESEMPATE = [
+  "cirrus",
+  "matrix",
+  "seneca",
+  "meridian",
+  "cheyenne",
+  "citation",
+  "hawker400a",
+];
 export const AERONAVES = {
   cirrus: {
-    nome: "Cirrus SR22",
+    nome: "Cirrus SR20",
+    imagem: `${AERONAVES_IMAGENS_BASE_URL}/SR20.png`,
     tipo: "Monomotor a pistão",
     perfil: "Liberdade para estar mais perto",
     familia: "pistao",
@@ -30,6 +40,7 @@ export const AERONAVES = {
   },
   matrix: {
     nome: "Piper Matrix",
+    imagem: `${AERONAVES_IMAGENS_BASE_URL}/PA-46R-350T.png`,
     tipo: "Monomotor a pistão",
     perfil: "Mais espaço para seus planos",
     familia: "pistao",
@@ -47,7 +58,8 @@ export const AERONAVES = {
     ],
   },
   seneca: {
-    nome: "Piper Seneca",
+    nome: "Seneca V",
+    imagem: `${AERONAVES_IMAGENS_BASE_URL}/SENECA-V-PA-34-220T.jpg`,
     tipo: "Bimotor a pistão",
     perfil: "Conexões que fazem seu dia render",
     familia: "pistao",
@@ -63,7 +75,8 @@ export const AERONAVES = {
     considerar: ["Pistas de propriedades exigem avaliação individual.", "Cabine não pressurizada."],
   },
   cheyenne: {
-    nome: "Piper Cheyenne II",
+    nome: "Cheyenne II",
+    imagem: `${AERONAVES_IMAGENS_BASE_URL}/CHEYENNEII-PA-31T.jpeg`,
     tipo: "Bimotor turboélice · pressurizado",
     perfil: "Seu tempo ganha novas distâncias",
     familia: "turboelice",
@@ -81,7 +94,8 @@ export const AERONAVES = {
     ],
   },
   citation: {
-    nome: "Cessna Citation 550",
+    nome: "Citation II",
+    imagem: `${AERONAVES_IMAGENS_BASE_URL}/c550.jpg`,
     tipo: "Bimotor a jato · pressurizado",
     perfil: "Mais destinos no mesmo dia",
     familia: "jato",
@@ -97,6 +111,44 @@ export const AERONAVES = {
     considerar: [
       "Aeroportos e pistas precisam ser compatíveis com a operação.",
       "Participação, disponibilidade e custos serão definidos em uma proposta.",
+    ],
+  },
+  meridian: {
+    nome: "Meridian / M500",
+    imagem: `${AERONAVES_IMAGENS_BASE_URL}/PA-46-500TP.jpg`,
+    tipo: "Monomotor turboélice · pressurizado",
+    perfil: "Alcance para a sua rotina",
+    familia: "turboelice",
+    pressurizada: true,
+    motores: 1,
+    limitePerfil: 4,
+    resumo: "Uma opção pressurizada para conectar cidades e propriedades com praticidade.",
+    destaques: [
+      "Cabine pressurizada para viagens regionais com mais conforto.",
+      "Uma alternativa turboélice para equilibrar alcance e operação.",
+    ],
+    considerar: [
+      "Rotas, pistas e bagagem precisam ser avaliadas para cada missão.",
+      "A configuração monomotora deve ser comparada às suas preferências.",
+    ],
+  },
+  hawker400a: {
+    nome: "Hawker Beechcraft 400A",
+    imagem: `${AERONAVES_IMAGENS_BASE_URL}/400A.png`,
+    tipo: "Bimotor a jato · pressurizado",
+    perfil: "Velocidade para conectar compromissos",
+    familia: "jato",
+    pressurizada: true,
+    motores: 2,
+    limitePerfil: 6,
+    resumo: "Para quem busca a experiência de um jato executivo em rotas entre cidades.",
+    destaques: [
+      "Cabine pressurizada e configuração bimotora para comparar em viagens de negócios.",
+      "Uma opção para estudar quando o tempo de deslocamento é decisivo.",
+    ],
+    considerar: [
+      "Aeroportos, pistas e infraestrutura precisam ser compatíveis com a operação.",
+      "Disponibilidade, custos e missão serão confirmados em uma proposta.",
     ],
   },
 };
@@ -125,21 +177,21 @@ export const PERGUNTAS = [
         "negocios",
         "Fazer meus negócios irem mais longe",
         "Você quer conectar compromissos e negócios",
-        { matrix: 1, seneca: 1, cheyenne: 2, citation: 2 },
+        { matrix: 1, seneca: 1, meridian: 1, cheyenne: 2, citation: 2, hawker400a: 2 },
         "Visitas, reuniões e mais de uma cidade no dia",
       ),
       opcao(
         "fazendas",
         "Conectar fazendas e propriedades",
         "Você precisa estar próximo da operação rural",
-        { cirrus: 2, seneca: 3, cheyenne: 1 },
+        { cirrus: 2, seneca: 3, meridian: 1, cheyenne: 1 },
         "Menos estrada, mais presença na operação",
       ),
       opcao(
         "equipe",
         "Viajar com minha equipe",
         "Você costuma viajar em grupo",
-        { matrix: 1, cheyenne: 3, citation: 2 },
+        { matrix: 1, meridian: 1, cheyenne: 3, citation: 2, hawker400a: 2 },
         "Pessoas e projetos seguindo juntos",
       ),
     ],
@@ -158,11 +210,14 @@ export const PERGUNTAS = [
       opcao("3-4", "3 a 4 passageiros", "Você quer espaço para um grupo de 3 a 4 passageiros", {
         matrix: 4,
         seneca: 3,
+        meridian: 4,
         cheyenne: 1,
       }),
       opcao("5-6", "5 a 6 passageiros", "Você precisa acomodar um grupo maior", {
+        meridian: 2,
         cheyenne: 4,
         citation: 3,
+        hawker400a: 3,
       }),
       opcao(
         "7+",
@@ -189,21 +244,21 @@ export const PERGUNTAS = [
         "media",
         "Entre estados próximos",
         "Você conecta estados próximos",
-        { matrix: 3, seneca: 2, cheyenne: 3, citation: 1 },
+        { matrix: 3, seneca: 2, meridian: 4, cheyenne: 3, citation: 1, hawker400a: 2 },
         "Viagens regionais um pouco mais longas",
       ),
       opcao(
         "longa",
         "Entre regiões do Brasil",
         "Você quer conectar diferentes regiões",
-        { matrix: 1, cheyenne: 3, citation: 4 },
+        { matrix: 1, meridian: 1, cheyenne: 3, citation: 4, hawker400a: 4 },
         "Destinos mais distantes e viagens de negócios",
       ),
       opcao(
         "muito-longa",
         "Longas distâncias, com poucas paradas",
         "Você valoriza autonomia e menos escalas",
-        { cheyenne: 1, citation: 5 },
+        { meridian: 1, cheyenne: 1, citation: 5, hawker400a: 5 },
         "A equipe vai estudar as rotas e eventuais escalas",
       ),
     ],
@@ -223,17 +278,21 @@ export const PERGUNTAS = [
         cirrus: 1,
         matrix: 2,
         seneca: 2,
+        meridian: 1,
         cheyenne: 1,
       }),
       opcao("6-12", "De 6 a 12 horas", "Você estima de 6 a 12 horas por mês", {
         matrix: 1,
         seneca: 1,
+        meridian: 1,
         cheyenne: 3,
         citation: 2,
       }),
       opcao("12+", "Mais de 12 horas", "Você prevê uma rotina de voos mais frequente", {
+        meridian: 1,
         cheyenne: 2,
         citation: 3,
+        hawker400a: 3,
       }),
       opcao("nao-sei", "Ainda estou descobrindo", "Seu plano de uso ainda está em construção", {}),
     ],
@@ -248,19 +307,19 @@ export const PERGUNTAS = [
         "asfalto",
         "Aeroportos com pista pavimentada",
         "Seus destinos têm pistas pavimentadas",
-        { citation: 1 },
+        { meridian: 1, citation: 1, hawker400a: 1 },
       ),
       opcao(
         "misto",
         "Aeroportos e pistas de propriedades",
         "Você precisa alternar aeroportos e propriedades",
-        { cirrus: 1, matrix: 1, seneca: 2, cheyenne: 1 },
+        { cirrus: 1, matrix: 1, seneca: 2, meridian: 1, cheyenne: 1 },
       ),
       opcao(
         "terra",
         "Principalmente fazendas e pistas não pavimentadas",
         "O acesso a propriedades é essencial",
-        { cirrus: 2, seneca: 3, cheyenne: 1 },
+        { cirrus: 2, seneca: 3, meridian: 1, cheyenne: 1 },
       ),
       opcao(
         "nao-sei",
@@ -278,14 +337,16 @@ export const PERGUNTAS = [
     opcoes: [
       opcao("tempo", "Ganhar o máximo de tempo", "Agilidade é sua prioridade", {
         matrix: 1,
+        meridian: 1,
         cheyenne: 3,
         citation: 5,
+        hawker400a: 5,
       }),
       opcao(
         "equilibrio",
         "Equilibrar conforto e custo",
         "Você busca equilíbrio entre experiência e custo",
-        { cirrus: 1, matrix: 3, seneca: 2, cheyenne: 2 },
+        { cirrus: 1, matrix: 3, seneca: 2, meridian: 3, cheyenne: 2 },
       ),
       opcao(
         "custo",
@@ -303,14 +364,16 @@ export const PERGUNTAS = [
       "Cabine pressurizada é um dos fatores para comparar as opções. O conforto também depende da missão e das condições do voo.",
     opcoes: [
       opcao("sim", "Quero uma cabine pressurizada", "Você valoriza cabine pressurizada", {
+        meridian: 5,
         cheyenne: 4,
         citation: 4,
+        hawker400a: 4,
       }),
       opcao(
         "indiferente",
         "Quero avaliar o melhor custo e benefício",
         "Você está aberto a diferentes experiências de cabine",
-        { cirrus: 2, matrix: 2, seneca: 2 },
+        { cirrus: 2, matrix: 2, seneca: 2, meridian: 2 },
       ),
     ],
   },
@@ -325,7 +388,7 @@ export const PERGUNTAS = [
         "dois-motores",
         "Prefiro uma aeronave com dois motores",
         "Você prefere a configuração bimotora",
-        { seneca: 4, cheyenne: 3, citation: 2 },
+        { seneca: 4, meridian: 1, cheyenne: 3, citation: 2, hawker400a: 2 },
       ),
       opcao(
         "caps",
@@ -368,7 +431,8 @@ export function recomendar(respostas) {
   const ranking = ORDEM_DESEMPATE.filter(
     (id) =>
       AERONAVES[id].limitePerfil >= grupo &&
-      !(id === "citation" && ["terra", "misto"].includes(respostas.pista)),
+      !(id === "citation" && ["terra", "misto"].includes(respostas.pista)) &&
+      !(id === "hawker400a" && ["terra", "misto"].includes(respostas.pista)),
   )
     .sort(
       (a, b) => pontos[b] - pontos[a] || ORDEM_DESEMPATE.indexOf(a) - ORDEM_DESEMPATE.indexOf(b),

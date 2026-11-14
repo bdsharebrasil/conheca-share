@@ -61,7 +61,7 @@ describe("Jornada e captura opcional", () => {
     preencherRespostas();
     expect(root.textContent).toContain("Seu resultado está pronto");
     expect(root.querySelector(".quiz-aircraft-photo img")?.getAttribute("src")).toBe(
-      "/assets/hero-aircraft.jpg",
+      "https://avatar-aeronaves.r2.dev/quiz/SR20.png",
     );
   });
   it("salva no D1 somente depois do consentimento e do término do quiz", async () => {

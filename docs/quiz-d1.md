@@ -5,7 +5,7 @@ O quiz usa o site atual (TanStack + JavaScript público) e uma API Cloudflare Wo
 ## O que está pronto
 
 - Jornada em português, oito perguntas, voltar/revisar e refazer.
-- Cinco perfis: Cirrus SR22, Piper Seneca, Piper Matrix, Cheyenne II e Citation 550.
+- Sete perfis: Cirrus SR20, Seneca V, Piper Matrix, Cheyenne II, Citation II, Meridian / M500 e Hawker Beechcraft 400A.
 - Resultado com os motivos vinculados às respostas, alternativa e pontos para a conversa.
 - Formulário final com nome, WhatsApp com DDD e cidade obrigatórios; rotas opcionais e momento de compra.
 - Registro no banco ao enviar o formulário, **antes e independentemente do WhatsApp**.
@@ -147,7 +147,7 @@ Para uma solicitação de exclusão confirmada pela equipe, faça a exclusão ad
 
 ## Calibrar os perfis antes de uma campanha
 
-Os pesos e `limitePerfil` em `public/quiz-model.js` são parâmetros de **triagem comercial**, não a lotação certificada ou promessa de desempenho da frota. As faixas conservadoras são 3/4/4/6/7 passageiros para Cirrus/Matrix/Seneca/Cheyenne/Citation, respectivamente. A opção «7 ou mais» vai para análise humana por ser uma faixa aberta. A Share deve ajustar as faixas conforme configuração, tripulação e operação reais.
+Os pesos e `limitePerfil` em `public/quiz-model.js` são parâmetros de **triagem comercial**, não a lotação certificada ou promessa de desempenho da frota. As faixas conservadoras são definidas em `public/quiz-model.js` para os sete perfis e devem ser calibradas pela Share conforme configuração, tripulação e operação reais. A opção «7 ou mais» vai para análise humana por ser uma faixa aberta. A Share deve ajustar as faixas conforme configuração, tripulação e operação reais.
 
 O jato fica fora quando o cliente declara precisar de pistas não pavimentadas, inclusive na opção mista. Isso evita apresentar uma solução que não cobre parte da missão. Os demais modelos também dependem de estudo de pistas; nenhuma resposta confirma viabilidade operacional. Distância, horas e preferências somam pontos, mas não substituem performance, peso e balanceamento nem análise comercial.
 
@@ -155,8 +155,12 @@ Mude as regras apenas no módulo compartilhado e atualize `VERSAO_QUIZ` em qualq
 
 ## Validação disponível no repositório
 
-`npm test` cobre as 23.040 combinações de respostas, os cinco perfis, restrições de passageiros/pistas, mensagem WhatsApp e o Worker com SQL real em SQLite. Os testes de banco executam as consultas e constraints com um adaptador local; não substituem a validação do binding num D1 real.
+`npm test` cobre as 23.040 combinações de respostas, os sete perfis, restrições de passageiros/pistas, mensagem WhatsApp e o Worker com SQL real em SQLite. Os testes de banco executam as consultas e constraints com um adaptador local; não substituem a validação do binding num D1 real.
 
 `npm run build` gera o site. `node --check cloudflare/quiz/worker.js` verifica sintaxe do Worker. Os arquivos públicos do quiz são copiados como recursos estáticos; a rota monta e desmonta seus listeners por eventos, inclusive quando o módulo já está em cache.
 
 Referências oficiais: [D1 bindings e batch](https://developers.cloudflare.com/d1/worker-api/d1-database/) e [migrações D1](https://developers.cloudflare.com/d1/reference/migrations/).
+
+## Imagens das aeronaves
+
+O resultado do quiz carrega a imagem do perfil escolhido no bucket R2 `avatar-aeronaves`, no prefixo `quiz/`. A base pública está centralizada em `AERONAVES_IMAGENS_BASE_URL` no modelo compartilhado; cada perfil aponta para o arquivo correspondente (`400A.png`, `CHEYENNEII-PA-31T.jpeg`, `PA-46-500TP.jpg`, `PA-46R-350T.png`, `SENECA-V-PA-34-220T.jpg`, `SR20.png` ou `c550.jpg`). Se o bucket usar domínio público customizado, altere apenas essa constante.
