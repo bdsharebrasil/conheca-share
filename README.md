@@ -22,3 +22,11 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Quiz e leads no Cloudflare D1
+
+Configuração completa, consultas e validação: [docs/quiz-d1.md](docs/quiz-d1.md).
+
+Prompt de ativação para o ambiente com acesso ao D1: [docs/prompt-quiz-d1.md](docs/prompt-quiz-d1.md).
+
+A API requer publicação própria e binding do banco. A captura só fica ativa depois dessa configuração e da variável `VITE_QUIZ_API_URL` no site (ou rota equivalente no mesmo domínio).

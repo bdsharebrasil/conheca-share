@@ -12,7 +12,11 @@ export const Route = createFileRoute("/")({
       { title: TITLE },
       { name: "description", content: DESC },
       { property: "og:title", content: "Share Brasil · Seu tempo, em outra altitude" },
-      { property: "og:description", content: "Gestão profissional de aeronaves. Conheça a Share e experimente a vida de cotista, sem cadastro." },
+      {
+        property: "og:description",
+        content:
+          "Gestão profissional de aeronaves. Conheça a Share e experimente a vida de cotista, sem cadastro.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "pt_BR" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -20,6 +24,7 @@ export const Route = createFileRoute("/")({
     links: [
       { rel: "stylesheet", href: "/site.css" },
       { rel: "stylesheet", href: "/portal-demo.css" },
+      { rel: "stylesheet", href: "/quiz.css" },
       { rel: "canonical", href: "https://conheca.share-brasil.com/" },
     ],
   }),
@@ -33,7 +38,29 @@ function Index() {
     s.type = "module";
     s.src = "/app.js";
     document.body.appendChild(s);
-    return () => s.remove();
+    const quiz = document.createElement("script");
+    quiz.type = "module";
+    quiz.src = "/quiz.js";
+    quiz.onload = () =>
+      document.dispatchEvent(
+        new CustomEvent("share:quiz:iniciar", {
+          detail: { apiBase: import.meta.env["VITE_QUIZ_API_URL"] || "" },
+        }),
+      );
+    quiz.onerror = () => {
+      const root = document.querySelector("#quiz-root");
+      if (root)
+        root.innerHTML =
+          "<p>Não foi possível carregar o quiz. Atualize a página ou fale com a Share pelo WhatsApp na seção de contato.</p>";
+    };
+    document.body.appendChild(quiz);
+    return () => {
+      document.dispatchEvent(new Event("share:quiz:limpar"));
+      quiz.onload = null;
+      quiz.onerror = null;
+      quiz.remove();
+      s.remove();
+    };
   }, []);
   return <div style={{ display: "contents" }} dangerouslySetInnerHTML={{ __html: SITE_BODY }} />;
 }
