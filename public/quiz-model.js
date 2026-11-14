@@ -8,7 +8,8 @@ export const MOMENTOS = {
   ESTE_ANO: "Mais adiante",
 };
 export const WHATSAPP_NUMERO = "5565981730641";
-export const AERONAVES_IMAGENS_BASE_URL = "https://avatar-aeronaves.r2.dev/quiz";
+export const AERONAVES_IMAGENS_BASE_URL =
+  "https://pub-f4fb8ab5edc0402a840f54b4988012c2.r2.dev/quiz";
 export const ORDEM_DESEMPATE = [
   "cirrus",
   "matrix",

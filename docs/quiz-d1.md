@@ -163,4 +163,4 @@ Referências oficiais: [D1 bindings e batch](https://developers.cloudflare.com/d
 
 ## Imagens das aeronaves
 
-O resultado do quiz carrega a imagem do perfil escolhido no bucket R2 `avatar-aeronaves`, no prefixo `quiz/`. A base pública está centralizada em `AERONAVES_IMAGENS_BASE_URL` no modelo compartilhado; cada perfil aponta para o arquivo correspondente (`400A.png`, `CHEYENNEII-PA-31T.jpeg`, `PA-46-500TP.jpg`, `PA-46R-350T.png`, `SENECA-V-PA-34-220T.jpg`, `SR20.png` ou `c550.jpg`). Se o bucket usar domínio público customizado, altere apenas essa constante.
+O resultado do quiz carrega a imagem do perfil escolhido no bucket R2 `avatar-aeronaves`, no prefixo `quiz/`, usando a base pública `https://pub-f4fb8ab5edc0402a840f54b4988012c2.r2.dev/quiz`. A base está centralizada em `AERONAVES_IMAGENS_BASE_URL` no modelo compartilhado; cada perfil aponta para o arquivo correspondente (`400A.png`, `CHEYENNEII-PA-31T.jpeg`, `PA-46-500TP.jpg`, `PA-46R-350T.png`, `SENECA-V-PA-34-220T.jpg`, `SR20.png` ou `c550.jpg`).

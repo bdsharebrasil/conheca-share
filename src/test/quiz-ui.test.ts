@@ -62,7 +62,7 @@ describe("Jornada e captura opcional", () => {
     expect(root.textContent).not.toContain("Perfil registrado");
     expect(root.querySelector(".quiz-profile")).toBeNull();
     expect(root.querySelector(".quiz-aircraft-photo img")?.getAttribute("src")).toBe(
-      "https://avatar-aeronaves.r2.dev/quiz/SR20.png",
+      "https://pub-f4fb8ab5edc0402a840f54b4988012c2.r2.dev/quiz/SR20.png",
     );
   });
   it("salva no D1 somente depois do consentimento e do término do quiz", async () => {
