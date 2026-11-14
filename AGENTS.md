@@ -37,3 +37,5 @@ use the editor.
 - Aircraft weights and passenger ranges are commercial screening settings, not certified fleet performance. Confirm them with Share before campaigns. Only expired technical counters are automatically deleted; do not add automatic lead deletion without a retention policy from Share.
 
 - The v3 quiz covers seven models, shares its calculation with backend-share/src/quiz/modelo.js, records optional/anonymous contact, and treats explicitly essential pressurization as a hard filter. Preserve the R2 photo for the actual result; never substitute another model on image failure.
+
+- Public copy must focus on gestão de cotas, administração de cotas and gestão privada de aeronaves. Apply this to headings, metadata, quiz results, simulator labels, downloads and WhatsApp messages. Keep the existing commercial rules and optional contact flow.

@@ -2,10 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { SITE_BODY } from "@/site-body";
 
-const TITLE = "AVIAÇÃO COMPARTILHADA, GESTÃO COMPLETA - CONHEÇA A SHARE BRASIL";
+const TITLE = "GESTÃO DE COTAS, ADMINISTRAÇÃO COMPLETA - CONHEÇA A SHARE BRASIL";
 const SHARE_IMAGE = "https://conheca.share-brasil.com/assets/share-signature-logo.png";
 const DESC =
-  "A liberdade de ter uma aeronave. A tranquilidade de ter a Share cuidando de tudo. Conheça a gestão compartilhada e privada da Share Brasil.";
+  "Gestão de cotas e administração de aeronaves com a Share Brasil. Controle financeiro, regras de uso, manutenção e prestação de contas em um só lugar.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
