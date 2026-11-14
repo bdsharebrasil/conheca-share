@@ -24,7 +24,7 @@
   background: var(--bg);
   color: var(--ink);
   border-color: var(--line);
-  border-radius: 48px;
+  border-radius: 18px;
   box-shadow: none;
 }
 .demo-shell .portal-sidebar { background: var(--portal-sidebar); border-color: var(--line); padding: 42px 14px 20px; border-radius: 0; overflow: hidden; }
@@ -141,4 +141,3 @@
   .demo-shell .stat-card:last-child { display: block; }
   .demo-shell .stat-card:last-child > .stat-number { margin-top: 12px; white-space: normal; }
 }
-
