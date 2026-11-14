@@ -28,12 +28,53 @@
   border-radius: 7px;
   padding: 10px 14px;
 }
+:root .site-header a.button.small.outline {
+  background: rgba(193, 236, 66, 0.1);
+  color: rgba(255, 255, 255, 1);
+  border-color: rgba(172, 211, 58, 0.96);
+}
+:root #quiz-start button.button.primary,
+:root #quiz-start button.button.primary:hover {
+  background: rgba(193, 236, 66, 0.22);
+  color: rgba(255, 255, 255, 1);
+  border-color: rgba(170, 207, 60, 1);
+  border-width: 2px;
+}
 :root #quiz-root .quiz-save-status button {
   background: var(--action);
   color: var(--action-ink);
   border-radius: 7px;
   text-decoration: none;
   padding: 10px 14px;
+}
+:root .contact-card label:has(input[value="ser cotista"]:checked) {
+  border-color: rgba(193, 236, 66, 1);
+}
+:root .contact-card label:has(input[value="ser cotista"]) span {
+  color: rgba(193, 236, 66, 1);
+}
+:root #conversa .contact-card,
+:root #conversa .contact-card label:has(input:checked),
+:root #conversa .button {
+  border-color: #c1ec42;
+}
+:root #conversa .contact-card label {
+  border-color: transparent;
+  transition:
+    border-color 0.2s,
+    transform 0.2s,
+    background 0.2s;
+}
+:root #conversa .contact-card label:hover {
+  transform: translateX(4px);
+}
+:root #conversa input {
+  accent-color: #c1ec42;
+  border-color: #c1ec42;
+}
+:root #conversa .arrow-ne,
+:root #conversa .contact-card label span {
+  color: #c1ec42;
 }
 :root :is(button, a.button):focus-visible {
   outline-color: var(--action);
