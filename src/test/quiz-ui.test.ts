@@ -59,7 +59,8 @@ describe("Jornada e captura opcional", () => {
     expect(within(root).getByLabelText("Seu nome (opcional)")).toBeTruthy();
     fireEvent.submit(root.querySelector("form")!);
     preencherRespostas();
-    expect(root.textContent).toContain("Seu resultado está pronto");
+    expect(root.textContent).not.toContain("Perfil registrado");
+    expect(root.querySelector(".quiz-profile")).toBeNull();
     expect(root.querySelector(".quiz-aircraft-photo img")?.getAttribute("src")).toBe(
       "https://avatar-aeronaves.r2.dev/quiz/SR20.png",
     );
@@ -71,7 +72,9 @@ describe("Jornada e captura opcional", () => {
     vi.stubGlobal("fetch", fetchMock);
     iniciarComContato();
     preencherRespostas();
-    await waitFor(() => expect(root.textContent).toContain("Perfil registrado"));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    expect(root.textContent).not.toContain("Perfil registrado");
+    expect(root.querySelector(".quiz-profile")).toBeNull();
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const payload = JSON.parse(fetchMock.mock.calls[0]![1].body);
     expect(payload.contato.nome).toBe("Pessoa Teste");
@@ -86,10 +89,12 @@ describe("Jornada e captura opcional", () => {
     vi.stubGlobal("fetch", fetchMock);
     iniciarComContato();
     preencherRespostas();
-    await waitFor(() => expect(root.textContent).toContain("registro opcional não foi concluído"));
+    await waitFor(() => expect(root.textContent).toContain("Tentar salvar novamente"));
     expect(root.querySelector("#quiz-whatsapp")).toBeTruthy();
     clicar("Tentar salvar novamente");
-    await waitFor(() => expect(root.textContent).toContain("Perfil registrado"));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+    expect(root.textContent).not.toContain("Perfil registrado");
+    expect(root.querySelector(".quiz-profile")).toBeNull();
     expect(fetchMock.mock.calls[1]![1].body).toBe(fetchMock.mock.calls[0]![1].body);
   });
   it("revisa preservando respostas e remove listeners na desmontagem", () => {
