@@ -314,3 +314,40 @@
     display: none;
   }
 }
+
+/* Cenas: cada capítulo fica grudado na tela e o próximo entra por cima com corte diagonal. */
+.scene {
+  --scene-top: 0px;
+  --scene-cut: 0px;
+  --scene-tilt: 0deg;
+  --scene-dim: 0;
+  position: sticky;
+  top: var(--scene-top);
+  min-height: 100svh;
+  background-color: var(--bg);
+  clip-path: polygon(0 var(--scene-cut), 100% 0, 100% 100%, 0 100%);
+  box-shadow: 0 -30px 60px #0006;
+}
+.scene > .wrap {
+  transform: rotate(var(--scene-tilt));
+  transform-origin: 0 0;
+}
+.scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #050d14;
+  opacity: var(--scene-dim);
+  pointer-events: none;
+  z-index: 5;
+}
+.light-section.scene { background-color: revert-layer; }
+@media (prefers-reduced-motion: reduce) {
+  .scene { clip-path: none; }
+  .scene > .wrap { transform: none; }
+  .scene::after { display: none; }
+}
+@media print {
+  .scene { position: relative; top: auto; clip-path: none; min-height: 0; }
+  .scene::after { display: none; }
+}
