@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, waitFor, within } from "@testing-library/dom";
 // @ts-expect-error Plain browser module.
-import { iniciarQuiz } from "../../public/quiz.js";
+import { iniciarQuiz } from "../quiz/quiz.js";
 // @ts-expect-error Shared commercial rules.
-import { recomendar } from "../../public/quiz-model.js";
+import { recomendar } from "../quiz/model.js";
 let root: HTMLElement, limpar: () => void;
 const respostas = {
   uso: "familia",
@@ -123,12 +123,18 @@ describe("Jornada e captura opcional", () => {
     fireEvent.submit(root.querySelector("form")!);
     expect(root.querySelector(".quiz-profile-list")).toBeNull();
     fireEvent.click(root.querySelector('input[value="negocios"]')!);
-    expect(root.querySelector(".quiz-profile-list")?.textContent).toContain("Fazer meus negócios irem mais longe");
+    expect(root.querySelector(".quiz-profile-list")?.textContent).toContain(
+      "Fazer meus negócios irem mais longe",
+    );
     expect(root.querySelector(".quiz-selection")?.textContent).toContain("Escolha registrada");
     expect(root.querySelector(".quiz-topline")?.textContent).toContain("1 de 8 perguntas");
-    expect(root.querySelector(".quiz-journey")?.textContent).not.toMatch(/Cirrus|Citation|Hawker|Meridian|Seneca|Cheyenne|Matrix/);
+    expect(root.querySelector(".quiz-journey")?.textContent).not.toMatch(
+      /Cirrus|Citation|Hawker|Meridian|Seneca|Cheyenne|Matrix/,
+    );
     clicar("Continuar");
-    expect(root.querySelector(".quiz-profile-list")?.textContent).toContain("Fazer meus negócios irem mais longe");
+    expect(root.querySelector(".quiz-profile-list")?.textContent).toContain(
+      "Fazer meus negócios irem mais longe",
+    );
     expect(root.querySelector(".quiz-topline")?.textContent).toContain("2 de 8 perguntas");
   });
   it("revisa preservando respostas e remove listeners na desmontagem", () => {

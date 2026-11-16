@@ -6,7 +6,7 @@ import {
   linkWhatsApp,
   respostasCompletas,
   // @ts-expect-error Shared browser/Worker module is plain JavaScript.
-} from "../../public/quiz-model.js";
+} from "../quiz/model.js";
 const base = {
   uso: "negocios",
   pax: "3-4",

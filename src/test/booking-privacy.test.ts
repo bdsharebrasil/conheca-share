@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 // @ts-expect-error The original site's browser modules are plain JavaScript.
-import { DEMO_AIRCRAFT_LABEL } from "../../public/booking-view.js";
+import { DEMO_AIRCRAFT_LABEL } from "../portal/booking-view.js";
 
 describe("Public booking illustration", () => {
   it("uses a neutral aircraft label instead of the real registration", () => {

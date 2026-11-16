@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calcularCena } from "../lib/story-motion";
+import { calcularCena } from "../site/story-motion";
 
 describe("Linha do tempo guiada pela rolagem", () => {
   it("produz posições intermediárias em 30%, sem esperar uma troca de cena", () => {
@@ -9,8 +9,8 @@ describe("Linha do tempo guiada pela rolagem", () => {
     expect(meio.progresso).toBe(0.3);
     expect(parseFloat(meio.variaveis["--sheet-one-y"])).toBeGreaterThan(0);
     expect(parseFloat(meio.variaveis["--sheet-one-y"])).toBeLessThan(118);
-    expect(meio.variaveis["--plane-roll"]).not.toBe(inicio.variaveis["--plane-roll"]);
-    expect(meio.variaveis["--plane-roll"]).not.toBe(fim.variaveis["--plane-roll"]);
+    expect(meio.variaveis["--photo-scale"]).not.toBe(inicio.variaveis["--photo-scale"]);
+    expect(meio.variaveis["--photo-scale"]).not.toBe(fim.variaveis["--photo-scale"]);
     expect(meio.variaveis["--control-progress"]).toBe("30%");
   });
   it("retorna exatamente à mesma pose ao voltar, sem depender do tempo", () => {

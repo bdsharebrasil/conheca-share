@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
   "name": "share-quiz-leads",
-  "main": "worker.js",
+  "main": "../../src/quiz/server/worker.js",
   "compatibility_date": "2026-11-14",
   "d1_databases": [
     {

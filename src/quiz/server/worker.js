@@ -1,4 +1,4 @@
-import { recomendar, respostasCompletas, PERGUNTAS, VERSAO_QUIZ } from "../../public/quiz-model.js";
+import { recomendar, respostasCompletas, PERGUNTAS, VERSAO_QUIZ } from "../model.js";
 
 const encoder = new TextEncoder();
 const hex = (buffer) =>
