@@ -1,4 +1,4 @@
-import { PERGUNTAS, AERONAVES, VERSAO_QUIZ, recomendar, linkWhatsApp } from "./quiz-model.js";
+import { PERGUNTAS, AERONAVES, VERSAO_QUIZ, recomendar, linkWhatsApp } from "./model.js";
 
 const esc = (v) =>
   String(v ?? "").replace(
@@ -259,15 +259,3 @@ export function iniciarQuiz(root, apiBase = "") {
   render();
   return () => abort.abort();
 }
-
-// O módulo é cacheado pelo navegador. Eventos permitem montar/desmontar a rota.
-let limparMontagem;
-document.addEventListener("share:quiz:iniciar", (e) => {
-  limparMontagem?.();
-  const root = document.querySelector("#quiz-root");
-  if (root) limparMontagem = iniciarQuiz(root, e.detail?.apiBase || "");
-});
-document.addEventListener("share:quiz:limpar", () => {
-  limparMontagem?.();
-  limparMontagem = null;
-});

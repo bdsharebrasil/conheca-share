@@ -1,9 +1,10 @@
-import { createElement, type ComponentType } from "react";
+import { createElement, StrictMode, type ComponentType } from "react";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Route } from "../routes/index";
 
 const Home = Route.options.component as ComponentType;
+const scrollOriginal = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "scrollIntoView");
 function movimento(reduzido: boolean) {
   vi.stubGlobal(
     "matchMedia",
@@ -17,8 +18,44 @@ function movimento(reduzido: boolean) {
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
+  if (scrollOriginal)
+    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", scrollOriginal);
+  else Reflect.deleteProperty(HTMLElement.prototype, "scrollIntoView");
 });
 describe("Apresentação e navegação", () => {
+  it("limpa interações e remonta o quiz e o portal sem duplicar eventos em StrictMode", () => {
+    movimento(true);
+    const rolarAte = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+      configurable: true,
+      value: rolarAte,
+    });
+    const montar = () => render(createElement(StrictMode, null, createElement(Home)));
+    const primeira = montar();
+    const menuAntigo = primeira.getByRole("button", { name: "Menu" });
+    const portal = primeira.container.querySelector("#portal-experience")!;
+    fireEvent.click(portal.querySelector("summary")!);
+    fireEvent.click(primeira.getByRole("button", { name: "Outra curiosidade ↻" }));
+    expect(primeira.container.querySelector(".fact-row")).toHaveTextContent(
+      "circunferência da Terra",
+    );
+    expect(primeira.container.querySelectorAll(".print-services")).toHaveLength(1);
+    expect(primeira.container.querySelector("#service-panel .service-icon svg")).not.toBeNull();
+    const iniciarAntigo = primeira.getByRole("button", { name: "Começar sem informar contato" });
+    primeira.unmount();
+    fireEvent.click(menuAntigo);
+    expect(menuAntigo.getAttribute("aria-expanded")).toBe("false");
+    fireEvent.click(iniciarAntigo);
+    expect(rolarAte).not.toHaveBeenCalled();
+    const segunda = montar();
+    expect(segunda.getByRole("button", { name: "Começar sem informar contato" })).toBeEnabled();
+    expect(segunda.container.querySelectorAll(".print-services")).toHaveLength(1);
+    expect(document.querySelector('script[src="/app.js"], script[src="/quiz.js"]')).toBeNull();
+    fireEvent.click(segunda.getByRole("button", { name: "Começar sem informar contato" }));
+    expect(segunda.container.querySelector("input[name=uso]")).not.toBeNull();
+    expect(rolarAte).toHaveBeenCalledTimes(1);
+  });
+
   it("mantém todas as mensagens acessíveis quando o visitante reduz o movimento", () => {
     movimento(true);
     const { container } = render(createElement(Home));

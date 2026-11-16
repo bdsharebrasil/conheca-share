@@ -1,36 +1,40 @@
-# Scrollytelling da Share Brasil
+# Apresentação com o céu original
 
-A abertura usa três cenários de tela inteira, com a aeronave em primeiro plano e dois planos diagonais independentes entrando por trás. A rolagem é a linha do tempo: não há reprodução automática ou atraso de suavização da pose. Os controles de capítulo apenas rolam a página até posições definidas.
+O hero preserva `public/assets/hero-aircraft.jpg` inteira: céu, aeronave e pôr do sol formam uma única cena. O render recortado foi removido. O enquadramento muda suavemente, enquanto os capítulos de gestão entram com corte diagonal e leve inclinação. Nas telas menores, o texto ocupa a parte superior e a fotografia permanece na região inferior.
 
-## Implementação
+## Organização e ciclo de vida
 
-- `src/lib/story-motion.ts` transforma o progresso entre 0 e 1 em posições, escalas, inclinações, rotações e cortes. A mesma entrada sempre produz os mesmos valores, na ida e na volta.
-- `public/scrollytelling.css` aplica as variáveis à aeronave, ao fundo e aos planos marfim e petróleo. As camadas da abertura não têm transições baseadas em tempo.
-- O avião é um render ilustrativo transparente com aparência tridimensional. A profundidade e a trajetória usam perspectiva CSS sobre a imagem; não há malha volumétrica WebGL/GLB ou câmera livre. O recorte permanece visível entre os cenários.
-- A área fixa usa `overflow: clip`, evitando que foco/clique nos controles role o conteúdo interno da cena. O documento continua com rolagem natural, sem interceptar roda, toque ou teclado.
-- Com redução de movimento, as cenas aparecem em fluxo normal e todo o conteúdo permanece acessível. A ilustração fica estática. A impressão usa o mesmo princípio.
-- O restante do site, quiz, regras comerciais das sete aeronaves, captura opcional e integração D1 permanecem como na versão anterior.
+A rota `src/routes/index.tsx` importa os estilos e chama `iniciarSite`, `iniciarCinema` e `iniciarQuiz` no efeito React. Cada inicializador devolve sua limpeza. Não há injeção de scripts nem guardas globais como `window.__cinema`.
 
-## Verificação
+- `src/site/cinema.ts`: menu acessível, atualização via requestAnimationFrame e controles que rolam até pontos da cena.
+- `src/site/story-motion.ts`: função pura entre 0 e 1 para zoom da foto, deslocamento, inclinação e entrada dos planos. O mesmo progresso produz os mesmos valores, inclusive ao voltar.
+- `src/styles/cinema.css`: fotografia e capítulos. Sem transições temporais nas camadas; `overflow: clip` impede deslocamento interno ao focar os controles.
+- `src/site/interactions.js`: composição da página, contato e progresso de leitura; `services.js`: abas dos serviços; `events.js`: eventos e animações com limpeza.
+- `src/portal/portal.js`: interface da demonstração, cancelamento de timers, liberação de URLs de download e remoção dos elementos temporários de impressão.
+- `src/quiz/`: quiz montado diretamente, sem eventos globais; sete modelos e contrato D1 preservados. A aparência escura está em `src/styles/quiz.css`.
 
-36 testes aprovados, TypeScript e build de produção. Os testes incluem posições intermediárias em 30%, continuidade entre trechos, avanço para 60% e retorno exato à pose anterior, redução de movimento e navegação por teclado.
+Foram removidos o observador da antiga barra de capítulos, os estilos antigos do hero e da ilustração circular de cotas e as classes de revelação sem uso. O ícone da coordenação é uma prancheta SVG local.
 
-No navegador, a rolagem natural atingiu `0.2999`: o plano marfim estava em `64.08198757763975%` e a inclinação do avião em `-9.62361827560796deg`. Após avançar e voltar, os dois valores retornaram exatamente ao mesmo estado. O plano fixo manteve `scrollTop = 0` ao navegar pelos controles. Foram conferidas as cenas completas e os cortes intermediários, além do viewport móvel de 390 px sem transbordamento horizontal. Não foi feito novo teste de gravação no D1 publicado.
+## Acessibilidade
 
-## Prévias
+A rolagem é nativa: não há captura de roda, toque ou teclado. Com redução de movimento, os três conteúdos ficam em fluxo normal e a fotografia é estática. Os formulários e tabelas não recebem animações de rolagem. Contato, consentimento e início sem identificação continuam opcionais.
 
-![Transição em aproximadamente 30%](share-cinema-transicao.jpg)
+## Validação
 
-![Cena marfim](share-cinema-marfim.jpg)
+Testes do progresso em 30%, avanço a 60% e retorno exato; continuidade da linha do tempo; montagem, limpeza e remontagem em StrictMode; regras das sete aeronaves, envio opcional e contrato do Worker em SQLite. TypeScript e build de produção.
 
-![Entrada diagonal do petróleo](share-cinema-corte.jpg)
+Verificação no navegador: desktop, menu móvel, formulário opcional, seleção de respostas e viewport de 390 px (375 px úteis com a barra de rolagem), sem transbordamento horizontal. O capítulo intermediário atingiu progresso `0.5300` e manteve `scrollTop = 0` no palco fixo.
 
-![Cena móvel](share-cinema-mobile.jpg)
+Prévias atuais:
 
-## Origem da ilustração
+![Hero com céu original](share-ceu-hero.jpg)
 
-Arquivo: `public/assets/aircraft-cinema.png`, PNG com alpha, 1774 × 887 pixels, 919.896 bytes. Criado com a ferramenta integrada de geração de imagem, usando `public/assets/hero-aircraft.jpg` como referência. É uma ilustração, sem matrícula ou identificação de um exemplar da frota. O original da geração foi mantido; a cópia no projeto é usada pelo site.
+![Quiz na paleta escura](share-quiz-escuro.jpg)
 
-Prompt de produção:
+![Capítulo intermediário com o céu](share-ceu-capitulo.jpg)
 
-> Use case: style-transfer / background-extraction. Asset type: foreground aircraft for a premium aviation company scroll-driven website. Edit target: the twin turboprop executive aircraft visible in the supplied photograph. Create ONE isolated aircraft as a photorealistic high-end 3D product render, three-quarter front side view, nose pointing LEFT and slightly toward the viewer, tail on the right, same sleek silver-white twin turboprop / T-tail silhouette as the reference. Keep both wings, both engines, propellers and entire tail completely inside the frame, generous transparent margin all around. Landing gear retracted, in-flight configuration. Clean neutral studio lighting with soft cool reflections, realistic glossy white aluminum and subtle dark trim; sufficient soft highlights so the aircraft is readable over both deep navy and warm ivory website scenes. The whole aircraft should occupy around 85% of a wide landscape canvas. Remove ALL clouds, sky, horizon, background, ground and scenery. Truly transparent alpha background, including between the wings and propellers. No text, no letters, no logo, no registration, no pedestal, no border, no cast ground shadow. A single complete premium aircraft asset, no montage and no cropped wings. This is an illustrative website aircraft, not a diagram or an exact certified model.
+![Prancheta da coordenação](share-prancheta.jpg)
+
+![Quiz no celular](share-quiz-mobile.jpg)
+
+Não foi realizada gravação de um lead no D1 de produção nesta revisão.

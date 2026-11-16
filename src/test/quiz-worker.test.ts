@@ -3,9 +3,9 @@ import { DatabaseSync } from "node:sqlite";
 import { readFileSync } from "node:fs";
 import { beforeEach, describe, expect, it } from "vitest";
 // @ts-expect-error Shared Worker implementation is JavaScript.
-import worker from "../../cloudflare/quiz/worker.js";
+import worker from "../quiz/server/worker.js";
 // @ts-expect-error Shared commercial model is JavaScript.
-import { VERSAO_QUIZ, recomendar } from "../../public/quiz-model.js";
+import { VERSAO_QUIZ, recomendar } from "../quiz/model.js";
 
 // Executes the real SQL, placeholders, constraints and transactions on SQLite.
 class Banco {

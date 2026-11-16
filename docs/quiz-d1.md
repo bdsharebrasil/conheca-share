@@ -69,6 +69,6 @@ Para histórico de versões anteriores, consulte também `leads_quiz`. Um clique
 
 Conclua o quiz sem contato, com nome sozinho, com telefone sozinho e com ambos autorizados. Confirme o resultado antes de qualquer clique no WhatsApp, depois o registro no D1. Verifique reenvio sem duplicação, rejeição de versão antiga e de resultado adulterado e ausência de listagem pública. Uma falha da API não pode impedir o resultado.
 
-O Worker separado de `cloudflare/quiz/worker.js` permanece como alternativa, usando binding `DB`, `ORIGENS_PERMITIDAS`, o mesmo segredo e a migração `0002_quiz_participacoes.sql`. O uso principal é o backend existente. Não rode dois serviços diferentes para gravar a mesma participação.
+O Worker separado de `src/quiz/server/worker.js` permanece como alternativa, usando binding `DB`, `ORIGENS_PERMITIDAS`, o mesmo segredo e a migração `0002_quiz_participacoes.sql`. O uso principal é o backend existente. Não rode dois serviços diferentes para gravar a mesma participação.
 
 Os módulos de modelo e captura devem permanecer equivalentes nos dois repositórios. A revisão das regras e das faixas comerciais está em `docs/revisao-quiz-sete-aeronaves.md`. As fotos usam os URLs de cada modelo já configurados no R2 da Share.

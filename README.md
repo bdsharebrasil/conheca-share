@@ -35,8 +35,19 @@ O quiz v3 usa o backend existente `api.share-brasil.com`, com `SHARE_DB`. A capt
 
 A abertura usa uma cena fixa limitada à seção inicial, com três mensagens ligadas à rolagem natural. O restante da página permanece estável. A versão com redução de movimento mostra as três mensagens em sequência, sem a cena fixa.
 
-A identidade visual fica em `public/premium.css`, com azul profundo, petróleo, marfim e a cor de ação `#c1ec42`. O quiz tem escolhas visuais e resumo das preferências; o módulo comercial e o contrato D1 permanecem os mesmos. O portal demonstrativo fica em uma seção expansível opcional.
+A identidade visual fica em `src/styles/institutional.css`, com azul profundo, petróleo, marfim e a cor de ação `#c1ec42`. O quiz tem escolhas visuais e resumo das preferências; o módulo comercial e o contrato D1 permanecem os mesmos. O portal demonstrativo fica em uma seção expansível opcional.
 
 Validação e prévias: [docs/experiencia-premium.md](docs/experiencia-premium.md).
 
-A abertura evoluiu para scrollytelling com aeronave em primeiro plano e planos diagonais. A posição da rolagem controla a pose sem reprodução automática. Detalhes e prévias em [docs/scrollytelling.md](docs/scrollytelling.md).
+A abertura preserva a fotografia completa com céu e pôr do sol. A posição da rolagem controla o enquadramento e a entrada dos planos diagonais, sem reprodução automática. Detalhes e prévias em [docs/scrollytelling.md](docs/scrollytelling.md).
+
+## Organização do código
+
+- `src/site/`: montagem das interações, navegação e linha do tempo do hero.
+- `src/portal/`: regras e apresentação da demonstração do portal.
+- `src/quiz/`: interface, modelo comercial e alternativa de Worker D1 em `server/`.
+- `src/styles/`: estilos importados pelo Vite, com versionamento dos arquivos no build.
+- `public/`: imagens, ícone e arquivos estáticos.
+- `cloudflare/quiz/`: configuração do Worker alternativo e histórico SQL.
+
+A rota monta os módulos com imports diretos e libera seus eventos ao sair. Não há scripts adicionados ao `document.body`, eventos globais de montagem do quiz ou estado global de inicialização.
