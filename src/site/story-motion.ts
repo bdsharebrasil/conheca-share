@@ -5,10 +5,10 @@ export function calcularSaidaHero(valor: number) {
     progresso,
     variaveis: {
       "--hero-drift": `${progresso * 25}%`,
-      "--hero-opacity": String(1 - progresso * 0.4),
-      "--photo-scale": String(1 + progresso * 0.04),
-      "--copy-opacity": String(1 - progresso * 0.7),
-      "--copy-y": `${progresso * -50}px`,
+      "--hero-opacity": String(Math.max(0, Math.min(1, 1.05 - progresso * 1.8))),
+      "--photo-scale": String(1 + progresso * 0.18),
+      "--copy-opacity": String(Math.max(0, 1 - progresso * 1.5)),
+      "--copy-y": `${progresso * -60}px`,
     },
   };
 }

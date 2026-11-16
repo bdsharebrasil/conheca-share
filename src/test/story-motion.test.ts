@@ -14,7 +14,10 @@ describe("Saída do hero guiada pela rolagem", () => {
       parseFloat(fim.variaveis["--hero-drift"]),
     );
     expect(parseFloat(meio.variaveis["--hero-opacity"])).toBeLessThan(1);
+    expect(parseFloat(meio.variaveis["--hero-opacity"])).toBeCloseTo(0.51);
+    expect(parseFloat(meio.variaveis["--photo-scale"])).toBeCloseTo(1.054);
     expect(parseFloat(meio.variaveis["--copy-opacity"])).toBeGreaterThan(0);
+    expect(calcularSaidaHero(0.6).variaveis["--hero-opacity"]).toBe("0");
   });
   it("retorna exatamente à mesma composição ao voltar", () => {
     const ida = calcularSaidaHero(0.3);

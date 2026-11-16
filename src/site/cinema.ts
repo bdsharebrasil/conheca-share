@@ -10,9 +10,90 @@ export function iniciarCinema(root: ParentNode = document) {
   let ultimoProgresso = -1;
   let ultimoMovimento: boolean | undefined;
 
+  const headings = Array.from(root.querySelectorAll<HTMLElement>(".chapter h2"))
+    .filter((heading) => !heading.closest(".quiz-section, [class*='portal']"))
+    .map((heading) => {
+      const ariaLabel = heading.getAttribute("aria-label");
+      const words: HTMLElement[] = [];
+      const labelContent = heading.cloneNode(true) as HTMLElement;
+      labelContent.querySelectorAll("br").forEach((lineBreak) => {
+        lineBreak.replaceWith(document.createTextNode(" "));
+      });
+      const accessibleText = labelContent.textContent?.trim().replace(/\s+/g, " ") ?? "";
+      heading.setAttribute("aria-label", accessibleText);
+      const wrapWords = (node: Node) => {
+        Array.from(node.childNodes).forEach((child) => {
+          if (child.nodeType === 3) {
+            const fragment = document.createDocumentFragment();
+            (child.textContent ?? "").split(/(\s+)/).forEach((text) => {
+              if (!text) return;
+              if (/^\s+$/.test(text)) {
+                fragment.append(document.createTextNode(text));
+              } else {
+                const word = document.createElement("span");
+                word.className = "cin-title-word";
+                word.setAttribute("aria-hidden", "true");
+                word.textContent = text;
+                words.push(word);
+                fragment.append(word);
+              }
+            });
+            child.parentNode?.replaceChild(fragment, child);
+          } else if (child.nodeType === 1) {
+            wrapWords(child);
+          }
+        });
+      };
+      wrapWords(heading);
+      return { heading, ariaLabel, words };
+    });
+
+  const progressButton = document.createElement("button");
+  progressButton.type = "button";
+  progressButton.className = "page-progress";
+  progressButton.setAttribute("aria-label", "Voltar ao topo");
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 56 56");
+  svg.setAttribute("aria-hidden", "true");
+  const track = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  track.setAttribute("cx", "28");
+  track.setAttribute("cy", "28");
+  track.setAttribute("r", "24");
+  const fill = track.cloneNode() as SVGCircleElement;
+  fill.classList.add("page-progress__fill");
+  svg.append(track, fill);
+  const label = document.createElement("span");
+  label.textContent = "0%";
+  progressButton.append(svg, label);
+  document.body.append(progressButton);
+  const onProgressClick = () =>
+    window.scrollTo({ top: 0, behavior: reduceMotion.matches ? "auto" : "smooth" });
+  progressButton.addEventListener("click", onProgressClick);
+
   const update = () => {
     frame = 0;
     header?.classList.toggle("is-scrolled", window.scrollY > 32);
+    const scrollRange = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const pageProgress = Math.max(0, Math.min(1, window.scrollY / scrollRange));
+    fill.style.strokeDashoffset = String(150.8 * (1 - pageProgress));
+    label.textContent = `${Math.round(pageProgress * 100)}%`;
+    progressButton.classList.toggle("is-visible", window.scrollY > window.innerHeight * 0.4);
+    headings.forEach(({ heading, words }) => {
+      const progress = reduceMotion.matches
+        ? 1
+        : Math.max(
+            0,
+            Math.min(
+              1,
+              (window.innerHeight * 0.92 - heading.getBoundingClientRect().top) /
+                Math.max(1, window.innerHeight * 0.4),
+            ),
+          );
+      words.forEach((word, index) => {
+        const reveal = Math.max(0, Math.min(1, progress * (words.length + 1.5) - index));
+        word.style.opacity = String(0.2 + 0.8 * reveal);
+      });
+    });
     if (!hero) return;
     const progress = reduceMotion.matches
       ? 0
@@ -62,6 +143,13 @@ export function iniciarCinema(root: ParentNode = document) {
     window.removeEventListener("scroll", onScroll);
     window.removeEventListener("resize", onScroll);
     reduceMotion.removeEventListener("change", update);
+    progressButton.removeEventListener("click", onProgressClick);
+    progressButton.remove();
+    headings.forEach(({ heading, ariaLabel, words }) => {
+      words.forEach((word) => word.replaceWith(document.createTextNode(word.textContent ?? "")));
+      if (ariaLabel === null) heading.removeAttribute("aria-label");
+      else heading.setAttribute("aria-label", ariaLabel);
+    });
     if (frame) window.cancelAnimationFrame(frame);
   };
 }

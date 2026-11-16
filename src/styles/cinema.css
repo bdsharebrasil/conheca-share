@@ -125,6 +125,56 @@
   z-index: 1;
   background: var(--bg);
 }
+.page-progress {
+  position: fixed;
+  left: 28px;
+  bottom: 26px;
+  z-index: 40;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #081523cc;
+  backdrop-filter: blur(10px);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition:
+    opacity 0.35s,
+    transform 0.35s;
+}
+.page-progress.is-visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.page-progress svg {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-90deg);
+}
+.page-progress circle {
+  fill: none;
+  stroke: #ffffff2e;
+  stroke-width: 2;
+}
+.page-progress__fill {
+  stroke: var(--action);
+  stroke-dasharray: 150.8;
+  stroke-dashoffset: 150.8;
+}
+.page-progress span {
+  font-size: 11px;
+  font-weight: 600;
+}
+.cin-title-word {
+  transition: opacity 0.15s linear;
+}
 .hero-story *,
 .hero-story *::before,
 .hero-story *::after {
@@ -147,6 +197,12 @@
 @media (max-width: 800px) {
   .hero-story {
     min-height: 560px;
+  }
+  .page-progress {
+    left: 16px;
+    bottom: 16px;
+    width: 48px;
+    height: 48px;
   }
   .story-backdrop .hero-photo {
     position: absolute;
@@ -213,6 +269,9 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .page-progress {
+    transition: none;
+  }
   .hero-stage,
   .hero-content,
   .story-backdrop .hero-photo {
@@ -231,6 +290,9 @@
     opacity: 1;
     background: white;
     color: #173740;
+  }
+  .page-progress {
+    display: none;
   }
   .hero-content {
     height: auto;

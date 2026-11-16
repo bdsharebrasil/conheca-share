@@ -67,6 +67,27 @@ describe("Apresentação e navegação", () => {
       getByRole("heading", { name: "Você conquista tempo. Nós cuidamos do caminho." }),
     ).toBeVisible();
   });
+  it("monta e limpa o indicador cinematográfico, respeitando movimento reduzido", () => {
+    movimento(true);
+    const scrollTo = vi.fn();
+    vi.stubGlobal("scrollTo", scrollTo);
+    const { getByRole, unmount } = render(createElement(StrictMode, null, createElement(Home)));
+    expect(document.querySelectorAll(".page-progress")).toHaveLength(1);
+    fireEvent.click(getByRole("button", { name: "Voltar ao topo" }));
+    expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: "auto" });
+    unmount();
+    expect(document.querySelectorAll(".page-progress")).toHaveLength(0);
+  });
+  it("revela títulos por palavra sem alterar o título do quiz", () => {
+    movimento(true);
+    const { container } = render(createElement(Home));
+    expect(container.querySelector(".company-intro h2 .cin-title-word")).not.toBeNull();
+    expect(container.querySelector(".quiz-section h2 .cin-title-word")).toBeNull();
+    expect(container.querySelector(".company-intro h2")).toHaveAttribute(
+      "aria-label",
+      "Você conquista tempo. Nós cuidamos do caminho.",
+    );
+  });
   it("deixa a demonstração visível e funcional sem precisar expandir um painel", () => {
     movimento(true);
     const { container, getByRole } = render(createElement(Home));

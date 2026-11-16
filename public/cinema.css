@@ -1,0 +1,23 @@
+/* Camada cinematográfica: só movimento e transições, mantém o visual atual do site. */
+.cin .hero{position:sticky;top:0;z-index:0;overflow:hidden}
+.cin .chapter:not(.hero){position:relative;z-index:1}
+.cin .hero-photo{transform-origin:68% 50%;will-change:transform}
+.cin .hero-content{will-change:transform,opacity}
+.cin .chapter:not(.hero){will-change:clip-path}
+.cin .brand img{width:132px}
+.cin-ring{position:fixed;left:28px;bottom:26px;z-index:40;width:56px;height:56px;padding:0;border:0;border-radius:50%;background:#081523cc;backdrop-filter:blur(10px);color:var(--ink);display:grid;place-items:center;cursor:pointer;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .35s,transform .35s}
+.cin-ring.on{opacity:1;transform:none;pointer-events:auto}
+.cin-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.cin-ring circle{fill:none;stroke:#ffffff2e;stroke-width:2}
+.cin-ring .f{stroke:var(--action,#C1EC42);stroke-dasharray:150.8;stroke-dashoffset:150.8}
+.cin-ring span{font-size:11px;font-weight:600}
+/* quiz: mesma estrutura, apresentação de palco */
+.cin .quiz-section{background:radial-gradient(90% 70% at 85% 0,#17303a,var(--bg) 70%)}
+.cin .quiz-question-layout h2,.cin .quiz-question-layout h3{font-size:clamp(32px,4.4vw,62px);line-height:1.06}
+.cin .quiz-option{transition:transform .25s,border-color .25s,background .25s}
+.cin .quiz-option:hover{transform:translateX(8px);border-color:var(--action,#C1EC42)}
+.cin .quiz-result-banner,.cin .quiz-aircraft-photo{animation:cin-wipe 1.1s cubic-bezier(.7,0,.2,1) both}
+@keyframes cin-wipe{from{clip-path:polygon(0 100%,100% 88%,100% 100%,0 100%)}to{clip-path:polygon(0 0,100% -12%,100% 100%,0 100%)}}
+@media(max-width:700px){.cin-ring{left:16px;bottom:16px;width:48px;height:48px}.cin .brand img{width:108px}}
+@media(prefers-reduced-motion:reduce){.cin .hero{position:relative}.cin-ring{transition:none}}
+@media print{.cin .hero{position:relative}.cin-ring{display:none}}
