@@ -119,6 +119,18 @@ describe("Jornada e captura opcional", () => {
     expect(root.textContent).toContain("Foto indisponível");
     expect(foto.src).not.toContain("hero-aircraft");
   });
+  it("atualiza o resumo da escolha sem antecipar uma aeronave ou avançar sozinho", () => {
+    fireEvent.submit(root.querySelector("form")!);
+    expect(root.querySelector(".quiz-profile-list")).toBeNull();
+    fireEvent.click(root.querySelector('input[value="negocios"]')!);
+    expect(root.querySelector(".quiz-profile-list")?.textContent).toContain("Fazer meus negócios irem mais longe");
+    expect(root.querySelector(".quiz-selection")?.textContent).toContain("Escolha registrada");
+    expect(root.querySelector(".quiz-topline")?.textContent).toContain("1 de 8 perguntas");
+    expect(root.querySelector(".quiz-journey")?.textContent).not.toMatch(/Cirrus|Citation|Hawker|Meridian|Seneca|Cheyenne|Matrix/);
+    clicar("Continuar");
+    expect(root.querySelector(".quiz-profile-list")?.textContent).toContain("Fazer meus negócios irem mais longe");
+    expect(root.querySelector(".quiz-topline")?.textContent).toContain("2 de 8 perguntas");
+  });
   it("revisa preservando respostas e remove listeners na desmontagem", () => {
     fireEvent.submit(root.querySelector("form")!);
     fireEvent.click(root.querySelector('input[value="familia"]')!);

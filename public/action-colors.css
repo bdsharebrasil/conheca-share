@@ -1,93 +1,99 @@
-/* Cor única para ações em toda a apresentação, portal e quiz. */
+/* Hierarquia de ações: verde Share nas ações principais; secundárias discretas. */
 :root {
   --action: #c1ec42;
-  --action-ink: #14232c;
+  --action-ink: #132b35;
 }
 .demo-shell {
   --gold: var(--action);
   --booking-primary: var(--action);
 }
-:root :is(.button, .booking-submit, .booking-swap, .icon-button, button.quiet),
-:root .demo-shell .mini-button,
-:root #quiz-root button[data-acao],
-:root #quiz-root button[type="submit"] {
-  background: var(--action);
-  color: var(--action-ink);
-  border-color: var(--action);
-}
-:root :is(.button, .booking-submit, .booking-swap, .icon-button, button.quiet):hover,
-:root .demo-shell .mini-button:hover,
-:root #quiz-root button[data-acao]:hover,
-:root #quiz-root button[type="submit"]:hover {
-  background: var(--action);
-  color: var(--action-ink);
-  border-color: var(--action);
-}
-:root button.quiet,
-:root #quiz-root button.quiet {
-  border-radius: 7px;
-  padding: 10px 14px;
-}
-:root .site-header a.button.small.outline {
-  background: rgba(193, 236, 66, 0.1);
-  color: rgba(255, 255, 255, 1);
-  border-color: rgba(172, 211, 58, 0.96);
-}
-:root #quiz-start button.button.primary,
-:root #quiz-start button.button.primary:hover {
-  background: rgba(193, 236, 66, 0.22);
-  color: rgba(255, 255, 255, 1);
-  border-color: rgba(170, 207, 60, 1);
-  border-width: 2px;
-}
-:root #quiz-root .quiz-save-status button {
-  background: var(--action);
-  color: var(--action-ink);
-  border-radius: 7px;
-  text-decoration: none;
-  padding: 10px 14px;
-}
-:root .contact-card label:has(input[value="ser cotista"]:checked) {
-  border-color: rgba(193, 236, 66, 1);
-}
-:root .contact-card label:has(input[value="ser cotista"]) span {
-  color: rgba(193, 236, 66, 1);
-}
-:root #conversa .contact-card,
-:root #conversa .contact-card label:has(input:checked),
-:root #conversa .button {
-  border-color: #c1ec42;
-}
-:root #conversa .contact-card label {
-  border-color: transparent;
+.button,
+.booking-submit,
+.mini-button {
+  font-weight: 550;
+  border-radius: 4px;
   transition:
-    border-color 0.2s,
-    transform 0.2s,
-    background 0.2s;
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+  min-height: 44px;
 }
-:root #conversa .contact-card label:hover {
-  transform: translateX(4px);
+.button.primary,
+.booking-submit,
+.demo-shell .mini-button.accent {
+  background: var(--action);
+  color: var(--action-ink);
+  border: 1px solid var(--action);
 }
-:root #conversa input {
-  accent-color: #c1ec42;
-  border-color: #c1ec42;
+.button.primary:hover,
+.booking-submit:hover,
+.demo-shell .mini-button.accent:hover {
+  background: #cbed6a;
+  border-color: #cbed6a;
+  transform: none;
 }
-:root #conversa .arrow-ne,
-:root #conversa .contact-card label span {
-  color: #c1ec42;
+.button.outline,
+.button.dark {
+  background: transparent;
+  border: 1px solid #ffffff45;
+  color: #f7f6f2;
 }
-:root :is(button, a.button):focus-visible {
-  outline-color: var(--action);
-}
-/* Navegação e seletores mantêm seus estados, usando a mesma cor de ação. */
-:root :is(.service-nav button[aria-selected="true"], .booking-tabs button.active),
-:root
-  .demo-shell
-  :is(
-    .doc-link,
-    .distance-options button[aria-pressed="true"],
-    .financial-tabs button[aria-pressed="true"]
-  ) {
-  color: var(--action);
+.button.outline:hover,
+.button.dark:hover {
   border-color: var(--action);
+  background: #ffffff08;
+  transform: none;
+}
+button.quiet {
+  background: transparent;
+  color: inherit;
+  padding: 10px 0;
+  min-height: 44px;
+  border: 0;
+  border-radius: 0;
+  font-size: 12px;
+}
+button.quiet:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.icon-button {
+  background: transparent;
+  color: inherit;
+  border: 1px solid currentColor;
+  min-height: 34px;
+}
+:root :is(button, a, input, summary):focus-visible {
+  outline: 2px solid var(--action);
+  outline-offset: 5px;
+}
+.light-section :is(button, a, input, summary):focus-visible,
+.quiz-section :is(button, a, input, summary):focus-visible {
+  outline-color: #426331;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.contact-card label {
+  border: 0;
+  border-bottom: 1px solid #ffffff20;
+  background: transparent;
+  transition: none;
+}
+.contact-card label:has(input:checked) {
+  color: var(--ink);
+  border-color: var(--action);
+  background: transparent;
+}
+.contact-card label span {
+  color: var(--action);
+}
+.contact-card input {
+  accent-color: var(--action);
+}
+:root :is(.service-nav button[aria-selected="true"], .booking-tabs button.active),
+.demo-shell
+  :is(.distance-options button[aria-pressed="true"], .financial-tabs button[aria-pressed="true"]) {
+  color: var(--action);
 }

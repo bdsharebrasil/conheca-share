@@ -29,7 +29,7 @@ use the editor.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
 
-- The home page is the original static Share Brasil site ported verbatim: markup in src/site-body.ts, styles/scripts in public/ (site.css, app.js, model.js). Why: preserves the vanilla-JS interactions exactly.
+- The home page uses markup in src/site-body.ts and vanilla-JS interactions in public/ (app.js, model.js). The institutional presentation uses public/premium.css; the original portal illustration remains scoped by portal-demo.css.
 - Keep booking presentation helpers in public/booking-view.js and use only a neutral aircraft label in the public illustration; this separates the real-page visual adaptation from the original demo's reservation rules.
 - Scope real-portal styling to .demo-shell in public/portal-demo.css; this preserves the surrounding site's design and keeps uploaded customer screenshots reference-only.
 - The aircraft quiz is in public/quiz-model.js (shared commercial rules), public/quiz.js (UI), public/quiz.css, and src/site-body.ts. It mounts through share:quiz:iniciar/limpar events so cached modules work after route remounts. Never persist contact details in browser storage.
@@ -39,3 +39,6 @@ use the editor.
 - The v3 quiz covers seven models, shares its calculation with backend-share/src/quiz/modelo.js, records optional/anonymous contact, and treats explicitly essential pressurization as a hard filter. Preserve the R2 photo for the actual result; never substitute another model on image failure.
 
 - Public copy must focus on gestão de cotas, administração de cotas and gestão privada de aeronaves. Apply this to headings, metadata, quiz results, simulator labels, downloads and WhatsApp messages. Keep the existing commercial rules and optional contact flow.
+
+- Keep the pinned aircraft scene limited to .hero-story. Never intercept wheel/touch scrolling or apply continuous motion to the quiz, forms or tables. Reduced-motion visitors must have all three messages readable without the pinned scroll. Keep the real aircraft fully framed.
+- The quiz uses visual choices and a live preference summary; do not reveal or imply a model before the final recommendation. Maintain optional contact, the seven-model scoring and D1 contract. The portal demo is an optional native details disclosure, not a replacement for the institutional services.
