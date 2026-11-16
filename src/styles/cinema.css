@@ -345,6 +345,45 @@
   .scene > .wrap { transform: none; }
   .scene::after { display: none; }
 }
+/* Serviços abertos podem ultrapassar uma tela: no celular, preservar a leitura
+   e a largura do fundo sem prender ou recortar o painel interativo. */
+@media (max-width: 800px) {
+  #gestao.scene {
+    position: relative;
+    top: auto;
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    padding-inline: 24px;
+    clip-path: none;
+    box-shadow: none;
+  }
+  #gestao.scene::after {
+    display: none;
+  }
+  #gestao .services,
+  #gestao .service-nav,
+  #gestao .service-detail {
+    min-width: 0;
+  }
+  #gestao .service-nav button {
+    width: 100%;
+    min-width: 0;
+    gap: 12px;
+    overflow-wrap: anywhere;
+  }
+  #gestao .service-nav button > span {
+    flex-shrink: 0;
+  }
+  #gestao .service-detail {
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 420px) {
+  #gestao.scene {
+    padding-inline: 20px;
+  }
+}
 @media print {
   .scene { position: relative; top: auto; clip-path: none; min-height: 0; }
   .scene::after { display: none; }
