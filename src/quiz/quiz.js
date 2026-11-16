@@ -5,6 +5,33 @@ const esc = (v) =>
     /[&<>"']/g,
     (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
   );
+// O DDD se separa do número sozinho enquanto a pessoa digita.
+const mascaraTelefone = (v) => {
+  let digitos = String(v).replace(/\D/g, "");
+  if (digitos.length >= 12 && digitos.startsWith("55")) digitos = digitos.slice(2);
+  digitos = digitos.slice(0, 11);
+  if (!digitos) return "";
+  if (digitos.length <= 2) return `(${digitos}`;
+  const ddd = digitos.slice(0, 2),
+    numero = digitos.slice(2);
+  if (numero.length <= 4) return `(${ddd}) ${numero}`;
+  const corte = numero.length === 8 ? 4 : 5;
+  return `(${ddd}) ${numero.slice(0, corte)}-${numero.slice(corte)}`;
+};
+function aplicarMascaraTelefone(campo) {
+  const formatado = mascaraTelefone(campo.value);
+  if (formatado === campo.value) return;
+  const ate = campo.selectionStart ?? campo.value.length;
+  const digitosAntes = campo.value.slice(0, ate).replace(/\D/g, "").length;
+  campo.value = formatado;
+  let pos = 0,
+    vistos = 0;
+  while (pos < formatado.length && vistos < digitosAntes) {
+    if (formatado[pos] >= "0" && formatado[pos] <= "9") vistos++;
+    pos++;
+  }
+  campo.setSelectionRange?.(pos, pos);
+}
 const aviao =
   '<svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><path d="M32 4c-3 0-4 5-4 10v10L7 38v5l21-7v13l-8 6v4l12-4 12 4v-4l-8-6V36l21 7v-5L36 24V14c0-5-1-10-4-10Z"/></svg>';
 const seta = '<span class="arrow-ne" aria-hidden="true"></span>';
