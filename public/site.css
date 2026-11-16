@@ -75,3 +75,26 @@ main:before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 .site-footer{position:relative}
 @media(max-width:700px){.chapter:before{top:88px;right:20px;font-size:8px}.chapter:after{width:90%;height:35%;right:-22%}.hero{min-height:750px}.demo-section,.contact-section{min-height:auto}.demo-section>.wrap{width:calc(100% - 24px)}.chapter .section-head,.chapter .intro-grid,.chapter .split-heading,.chapter .ownership-layout,.chapter .services,.chapter .safety-row,.chapter .demo-shell,.chapter .quiz-shell,.chapter .contact-grid{transform:translate3d(0,calc(var(--scene-shift)*.45),0)}.chapter-bar:after{height:1px}}
 @media(prefers-reduced-motion:reduce){.chapter,.chapter:after,.chapter .section-head,.chapter .intro-grid,.chapter .split-heading,.chapter .ownership-layout,.chapter .services,.chapter .safety-row,.chapter .demo-shell,.chapter .quiz-shell,.chapter .contact-grid,.hero:after,.hero-photo,.hero-content,.share-ring,.demo-shell{transform:none!important;transition:none!important}.chapter .section-head,.chapter .intro-grid,.chapter .split-heading,.chapter .ownership-layout,.chapter .services,.chapter .safety-row,.chapter .demo-shell,.chapter .quiz-shell,.chapter .contact-grid{opacity:1}.chapter-bar:after{width:calc(var(--page-progress)*100%)}}
+
+/* Responsive layout correction: keep every scene inside the viewport margins. */
+html,body{max-width:100%;overflow-x:hidden}
+.wrap{width:calc(100% - 112px);max-width:1280px;margin-inline:auto}
+.hero-content.wrap{position:absolute;top:44%;left:50%;width:calc(100% - 112px);max-width:1280px;flex:0 0 auto;margin:0;transform:translate3d(-50%,calc(-50% + (var(--scene-progress)*-26px)),0)}
+.hero-bottom.wrap{width:calc(100% - 112px);max-width:1280px;left:50%;right:auto;transform:translateX(-50%)}
+.hero-content{transform:translate3d(-50%,calc(-50% + (var(--scene-progress)*-26px)),0)}
+.demo-section>.wrap{width:calc(100% - 112px);max-width:1280px;flex:0 1 auto}
+.chapter .section-head,.chapter .intro-grid,.chapter .split-heading,.chapter .ownership-layout,.chapter .services,.chapter .safety-row,.chapter .demo-shell,.chapter .quiz-shell,.chapter .contact-grid{max-width:100%}
+@media(max-width:1200px){.wrap,.hero-content.wrap,.hero-bottom.wrap,.demo-section>.wrap{width:calc(100% - 64px)}}
+@media(max-width:700px){
+  .wrap,.hero-content.wrap,.hero-bottom.wrap,.demo-section>.wrap{width:calc(100% - 40px)}
+  .hero-content.wrap{top:143px;left:20px;width:calc(100% - 40px);transform:translate3d(0,calc(var(--scene-progress)*-14px),0)}
+  .hero-content{transform:translate3d(0,calc(var(--scene-progress)*-14px),0)}
+  .hero-bottom.wrap{left:50%;right:auto}
+  .hero h1{font-size:clamp(48px,13vw,68px);max-width:100%;overflow-wrap:normal}
+  .hero-copy{max-width:100%;font-size:14px}
+  .chapter-bar>.wrap{width:100%;padding-inline:20px}
+  .demo-section .section-head,.demo-section .split-heading{padding-inline:0}
+  .demo-section .demo-shell{width:100%}
+  .site-footer.wrap{width:calc(100% - 40px)}
+}
+@media(prefers-reduced-motion:reduce){.hero-content{transform:none!important}}
