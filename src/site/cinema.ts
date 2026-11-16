@@ -54,6 +54,8 @@ export function iniciarCinema(root: ParentNode = document) {
   scenes.forEach((scene, index) => {
     scene.classList.add("scene");
     scene.style.zIndex = String(index + 2);
+    if (getComputedStyle(scene).backgroundColor === "rgba(0, 0, 0, 0)")
+      scene.style.backgroundColor = "var(--bg)";
   });
   const updateScenes = () => {
     const vh = window.innerHeight;
@@ -183,7 +185,7 @@ export function iniciarCinema(root: ParentNode = document) {
     });
     scenes.forEach((scene) => {
       scene.classList.remove("scene");
-      ["z-index", "--scene-top", "--scene-cut", "--scene-tilt", "--scene-dim"].forEach((n) =>
+      ["z-index", "background-color", "--scene-top", "--scene-cut", "--scene-tilt", "--scene-dim"].forEach((n) =>
         scene.style.removeProperty(n),
       );
     });
