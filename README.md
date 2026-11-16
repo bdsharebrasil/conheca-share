@@ -33,13 +33,13 @@ O quiz v3 usa o backend existente `api.share-brasil.com`, com `SHARE_DB`. A capt
 
 ## Experiência institucional
 
-A abertura usa uma cena fixa limitada à seção inicial, com três mensagens ligadas à rolagem natural. O restante da página permanece estável. A versão com redução de movimento mostra as três mensagens em sequência, sem a cena fixa.
+A abertura ocupa uma tela, com o céu original. Ao rolar, o hero sai e a seção A Share sobe junto, pelo fluxo normal da página. Não há capítulos intermediários, tela marfim ou espaço de rolagem extra. A preferência por movimento reduzido desativa o efeito.
 
-A identidade visual fica em `src/styles/institutional.css`, com azul profundo, petróleo, marfim e a cor de ação `#c1ec42`. O quiz tem escolhas visuais e resumo das preferências; o módulo comercial e o contrato D1 permanecem os mesmos. O portal demonstrativo fica em uma seção expansível opcional.
+A identidade visual fica em `src/styles/institutional.css`, com azul profundo, petróleo, marfim e a cor de ação `#c1ec42`. O quiz tem escolhas visuais e resumo das preferências; o módulo comercial e o contrato D1 permanecem os mesmos. O portal demonstrativo já aparece aberto na seção 04, com suas abas disponíveis para interação sem cadastro.
 
 Validação e prévias: [docs/experiencia-premium.md](docs/experiencia-premium.md).
 
-A abertura preserva a fotografia completa com céu e pôr do sol. A posição da rolagem controla o enquadramento e a entrada dos planos diagonais, sem reprodução automática. Detalhes e prévias em [docs/scrollytelling.md](docs/scrollytelling.md).
+A abertura preserva a fotografia completa com céu e pôr do sol. A posição da rolagem controla apenas a saída da abertura, enquanto o primeiro conteúdo real sobe, sem reprodução automática. Detalhes e prévias em [docs/scrollytelling.md](docs/scrollytelling.md).
 
 ## Organização do código
 

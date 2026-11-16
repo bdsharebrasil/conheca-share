@@ -1,34 +1,37 @@
 import { describe, expect, it } from "vitest";
-import { calcularCena } from "../site/story-motion";
+import { calcularSaidaHero } from "../site/story-motion";
 
-describe("Linha do tempo guiada pela rolagem", () => {
-  it("produz posições intermediárias em 30%, sem esperar uma troca de cena", () => {
-    const inicio = calcularCena(0),
-      meio = calcularCena(0.3),
-      fim = calcularCena(1);
+describe("Saída do hero guiada pela rolagem", () => {
+  it("move e reduz a abertura progressivamente, sem cenários intermediários", () => {
+    const inicio = calcularSaidaHero(0),
+      meio = calcularSaidaHero(0.3),
+      fim = calcularSaidaHero(1);
     expect(meio.progresso).toBe(0.3);
-    expect(parseFloat(meio.variaveis["--sheet-one-y"])).toBeGreaterThan(0);
-    expect(parseFloat(meio.variaveis["--sheet-one-y"])).toBeLessThan(118);
-    expect(meio.variaveis["--photo-scale"]).not.toBe(inicio.variaveis["--photo-scale"]);
-    expect(meio.variaveis["--photo-scale"]).not.toBe(fim.variaveis["--photo-scale"]);
-    expect(meio.variaveis["--control-progress"]).toBe("30%");
+    expect(parseFloat(meio.variaveis["--hero-drift"])).toBeGreaterThan(
+      parseFloat(inicio.variaveis["--hero-drift"]),
+    );
+    expect(parseFloat(meio.variaveis["--hero-drift"])).toBeLessThan(
+      parseFloat(fim.variaveis["--hero-drift"]),
+    );
+    expect(parseFloat(meio.variaveis["--hero-opacity"])).toBeLessThan(1);
+    expect(parseFloat(meio.variaveis["--copy-opacity"])).toBeGreaterThan(0);
   });
-  it("retorna exatamente à mesma pose ao voltar, sem depender do tempo", () => {
-    const ida = calcularCena(0.3);
-    calcularCena(0.8);
-    calcularCena(1);
-    expect(calcularCena(0.3)).toEqual(ida);
+  it("retorna exatamente à mesma composição ao voltar", () => {
+    const ida = calcularSaidaHero(0.3);
+    calcularSaidaHero(0.6);
+    calcularSaidaHero(1);
+    expect(calcularSaidaHero(0.3)).toEqual(ida);
   });
-  it("mantém a animação contínua ao atravessar as mudanças de capítulo", () => {
-    for (const limite of [0.14, 0.32, 0.4, 0.49, 0.58, 0.65, 0.8, 0.94]) {
-      const antes = calcularCena(limite - 0.00001).variaveis;
-      const depois = calcularCena(limite + 0.00001).variaveis;
+  it("mantém continuidade e limita os extremos da rolagem", () => {
+    for (const limite of [0.1, 0.3, 0.5, 0.7, 0.9]) {
+      const antes = calcularSaidaHero(limite - 0.00001).variaveis;
+      const depois = calcularSaidaHero(limite + 0.00001).variaveis;
       for (const nome of Object.keys(antes) as Array<keyof typeof antes>) {
         expect(Math.abs(parseFloat(antes[nome]) - parseFloat(depois[nome]))).toBeLessThan(0.02);
       }
     }
-    expect(calcularCena(-1)).toEqual(calcularCena(0));
-    expect(calcularCena(2)).toEqual(calcularCena(1));
-    expect(calcularCena(NaN)).toEqual(calcularCena(0));
+    expect(calcularSaidaHero(-1)).toEqual(calcularSaidaHero(0));
+    expect(calcularSaidaHero(2)).toEqual(calcularSaidaHero(1));
+    expect(calcularSaidaHero(NaN)).toEqual(calcularSaidaHero(0));
   });
 });
