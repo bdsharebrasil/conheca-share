@@ -130,7 +130,7 @@ $('.service-nav').addEventListener('keydown',e=>{const b=e.target.closest('[data
 const portalIconPaths={resumo:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/>',agenda:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/><circle cx="12" cy="16" r="2"/>',simulador:'<path d="M4 20 20 4M10 4h10v10"/>',financeiro:'<rect x="3" y="5" width="18" height="15" rx="2"/><path d="M3 9h18M16 13h5v4h-5z"/>',manutencao:'<path d="M14 6a5 5 0 0 0-6 6L3 17a2.8 2.8 0 0 0 4 4l5-5a5 5 0 0 0 6-6l-4 3-3-3z"/>'};
 document.querySelectorAll('#portal-nav button').forEach(b=>{const icon=b.querySelector('span');if(icon){icon.className='portal-icon';icon.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${portalIconPaths[b.dataset.tab]||''}</svg>`;}});
 $('#portal-nav').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)goTab(b.dataset.tab,true);});
-document.querySelectorAll('[data-demo-link]').forEach(a=>a.addEventListener('click',()=>goTab(a.dataset.demoLink)));
+document.querySelectorAll('[data-demo-link]').forEach(a=>a.addEventListener('click',()=>{document.querySelector('#portal-experience').open=true;goTab(a.dataset.demoLink);}));
 $('#reset-demo').addEventListener('click',()=>modal(`<h3 id="dialog-title">Recomeçar a experiência?</h3><p>Os voos que você criou neste navegador serão removidos. O portal volta ao cenário inicial de demonstração.</p><div class="mini-actions"><button class="mini-button accent" data-action="reset">Sim, reiniciar demo</button><button class="mini-button" data-action="close">Continuar explorando</button></div>`));
 content.addEventListener('submit',e=>{
  if(e.target.id==='booking-form'){e.preventDefault();captureBooking(e.target);const error=validarReserva(draft,reservas);if(error){$('#booking-error').hidden=false;$('#booking-error').textContent=error;return;}
@@ -191,22 +191,10 @@ window.addEventListener('beforeprint',()=>{
   tab=view;render();const clone=content.cloneNode(true);if(view==='financeiro')clone.querySelector('#finance-detail').innerHTML=`<h4>Balanço do mês</h4>${balanceTable(financeiro(mesFinanceiro))}<h4 style="margin-top:20px">Lançamentos e rateios</h4>${ledgerTable(financeiro(mesFinanceiro))}<h4 style="margin-top:20px">Despesas de viagem</h4>${travelReport(financeiro(mesFinanceiro))}`;clone.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));clone.removeAttribute('id');clone.querySelectorAll('details').forEach(d=>d.open=true);
   snapshots.push(`<article><h3>${label}</h3>${clone.innerHTML}</article>`);
  }
- tab=original;render();printNode?.remove();printNode=document.createElement('div');printNode.className='print-demo';printNode.innerHTML=snapshots.join('');$('.demo-shell').after(printNode);
+ tab=original;render();printNode?.remove();printNode=document.createElement('div');printNode.className='print-demo';printNode.innerHTML=snapshots.join('');($('#portal-experience')||$('.demo-shell')).after(printNode);
 });
 window.addEventListener('afterprint',()=>{printNode?.remove();printNode=null;document.querySelectorAll('.faq-list details').forEach((d,i)=>d.open=printOpen[i]||false);});
 
-// Reveal groups once as they enter the page, without hiding content if scripts fail.
-if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
- const reveals=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;const el=entry.target;el.classList.remove('scroll-pending');el.classList.add('scroll-visible');reveals.unobserve(el);});},{threshold:0});
- document.querySelectorAll('.section-head,.intro-grid,.foundation>div,.split-heading,.ownership-layout,.services,.safety-row,.experience-benefits>div,.faq-list,.contact-grid').forEach(el=>{if(el.getBoundingClientRect().top>window.innerHeight){el.classList.add('scroll-pending');reveals.observe(el);}});
- animateScreen($('.hero-content'));
-}
 
-
-document.addEventListener('DOMContentLoaded',()=>{
- const ring=document.querySelector('.share-ring');
- if(ring){
-  const ringObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('is-visible');});},{threshold:0.4});
-  ringObserver.observe(ring);
- }
-});
+// Mostra a primeira frente de gestão; as demais ficam disponíveis para explorar.
+setService(0);

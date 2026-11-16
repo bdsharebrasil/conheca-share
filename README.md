@@ -30,3 +30,11 @@ Configuração completa, consultas e validação: [docs/quiz-d1.md](docs/quiz-d1
 Prompt de ativação para o ambiente com acesso ao D1: [docs/prompt-quiz-d1.md](docs/prompt-quiz-d1.md).
 
 O quiz v3 usa o backend existente `api.share-brasil.com`, com `SHARE_DB`. A captura exige aplicar a migração nova e configurar `QUIZ_HASH_SECRET` nesse Worker. O serviço separado é uma alternativa.
+
+## Experiência institucional
+
+A abertura usa uma cena fixa limitada à seção inicial, com três mensagens ligadas à rolagem natural. O restante da página permanece estável. A versão com redução de movimento mostra as três mensagens em sequência, sem a cena fixa.
+
+A identidade visual fica em `public/premium.css`, com azul profundo, petróleo, marfim e a cor de ação `#c1ec42`. O quiz tem escolhas visuais e resumo das preferências; o módulo comercial e o contrato D1 permanecem os mesmos. O portal demonstrativo fica em uma seção expansível opcional.
+
+Validação e prévias: [docs/experiencia-premium.md](docs/experiencia-premium.md).

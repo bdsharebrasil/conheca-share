@@ -35,6 +35,7 @@ export const Route = createFileRoute("/")({
       { rel: "stylesheet", href: "/portal-demo.css" },
       { rel: "stylesheet", href: "/quiz.css" },
       { rel: "stylesheet", href: "/action-colors.css" },
+      { rel: "stylesheet", href: "/premium.css" },
       { rel: "canonical", href: "https://conheca.share-brasil.com/" },
     ],
   }),
@@ -76,55 +77,82 @@ function Index() {
   }, []);
 
   useEffect(() => {
-    const root = document.documentElement;
-    const scenes = Array.from(document.querySelectorAll<HTMLElement>(".chapter"));
-    const chapterLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>(".chapter-bar a"));
+    const hero = document.querySelector<HTMLElement>(".hero-story");
+    const header = document.querySelector<HTMLElement>(".site-header");
+    const panels = Array.from(document.querySelectorAll<HTMLElement>("[data-hero-panel]"));
+    const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-hero-go]"));
+    const menu = document.querySelector<HTMLButtonElement>(".menu-toggle");
+    const navigation = document.querySelector<HTMLElement>("#site-navigation");
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
 
-    scenes.forEach((scene, index) => {
-      scene.dataset.scene = String(index + 1).padStart(2, "0");
-      scene.style.setProperty("--scene-index", String(index));
-    });
-
-    const updateStory = () => {
+    const update = () => {
       frame = 0;
-      const viewport = window.innerHeight;
-      const maxScroll = document.documentElement.scrollHeight - viewport;
-      const pageProgress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
-      root.style.setProperty("--page-progress", pageProgress.toFixed(4));
-
-      let activeScene = scenes[0];
-      scenes.forEach((scene) => {
-        const rect = scene.getBoundingClientRect();
-        const sceneLength = Math.max(rect.height - viewport * 0.2, viewport * 0.55);
-        const progress = Math.min(1, Math.max(0, (viewport * 0.58 - rect.top) / sceneLength));
-        scene.style.setProperty("--scene-progress", progress.toFixed(4));
-        scene.style.setProperty("--scene-distance", `${Math.round(rect.top - viewport * 0.12)}px`);
-        if (rect.top <= viewport * 0.45 && rect.bottom >= viewport * 0.45) activeScene = scene;
+      header?.classList.toggle("is-scrolled", window.scrollY > 32);
+      if (!hero) return;
+      const range = Math.max(1, hero.offsetHeight - window.innerHeight);
+      const progress = Math.max(0, Math.min(1, -hero.getBoundingClientRect().top / range));
+      const active = Math.min(2, Math.floor(progress * 3));
+      panels.forEach((panel, index) => {
+        const visible = reduceMotion.matches || index === active;
+        panel.classList.toggle("is-active", visible);
+        panel.setAttribute("aria-hidden", String(!visible));
+        panel.toggleAttribute("inert", !visible);
       });
-
-      const activeId = activeScene?.id;
-      chapterLinks.forEach((link) => {
-        const active = link.getAttribute("href") === `#${activeId}`;
-        link.classList.toggle("active", active);
-        if (active) link.setAttribute("aria-current", "location");
-        else link.removeAttribute("aria-current");
-      });
+      buttons.forEach((button, index) =>
+        button.setAttribute("aria-pressed", String(index === active)),
+      );
     };
-
     const onScroll = () => {
-      if (!frame) frame = window.requestAnimationFrame(updateStory);
+      if (!frame) frame = window.requestAnimationFrame(update);
     };
-
-    updateStory();
+    const goToPanel = (event: Event) => {
+      const button = (event.target as HTMLElement).closest<HTMLElement>("[data-hero-go]");
+      if (!hero || !button) return;
+      const index = Number(button.dataset["heroGo"]);
+      if (reduceMotion.matches) {
+        panels[index]?.scrollIntoView({ block: "center" });
+        return;
+      }
+      const start = hero.getBoundingClientRect().top + window.scrollY;
+      const range = Math.max(1, hero.offsetHeight - window.innerHeight);
+      window.scrollTo({ top: start + range * ((index + 0.12) / 3), behavior: "smooth" });
+    };
+    const closeMenu = () => {
+      menu?.setAttribute("aria-expanded", "false");
+      navigation?.classList.remove("is-open");
+    };
+    const toggleMenu = () => {
+      const open = menu?.getAttribute("aria-expanded") !== "true";
+      menu?.setAttribute("aria-expanded", String(open));
+      navigation?.classList.toggle("is-open", open);
+    };
+    const onNavigation = (event: Event) => {
+      if ((event.target as HTMLElement).closest("a")) closeMenu();
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && menu?.getAttribute("aria-expanded") === "true") {
+        closeMenu();
+        menu.focus();
+      }
+    };
+    const controls = document.querySelector(".hero-scenes");
+    controls?.addEventListener("click", goToPanel);
+    menu?.addEventListener("click", toggleMenu);
+    navigation?.addEventListener("click", onNavigation);
+    document.addEventListener("keydown", onKey);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
-    reduceMotion.addEventListener?.("change", onScroll);
+    reduceMotion.addEventListener("change", update);
+    update();
     return () => {
+      controls?.removeEventListener("click", goToPanel);
+      menu?.removeEventListener("click", toggleMenu);
+      navigation?.removeEventListener("click", onNavigation);
+      document.removeEventListener("keydown", onKey);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
-      reduceMotion.removeEventListener?.("change", onScroll);
+      reduceMotion.removeEventListener("change", update);
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
