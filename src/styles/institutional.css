@@ -318,52 +318,7 @@ p {
   min-height: 0;
 }
 .portal-experience {
-  border-block: 1px solid #ffffff25;
-}
-.portal-experience > summary {
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 28px;
-  cursor: pointer;
-  padding: 38px 0;
-}
-.portal-experience > summary::-webkit-details-marker {
-  display: none;
-}
-.portal-experience > summary > span:first-child {
-  display: grid;
-  gap: 14px;
-}
-.portal-experience summary small {
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  color: #a8babf;
-}
-.portal-experience summary strong {
-  font-size: 29px;
-  font-weight: 450;
-  letter-spacing: -0.025em;
-}
-.portal-experience summary > span > span {
-  font-size: 13px;
-  color: var(--muted);
-}
-.portal-open-label {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  white-space: nowrap;
-  font-size: 12px;
-  color: var(--action);
-}
-.portal-open-label b {
-  font-size: 24px;
-  font-weight: 300;
-}
-.portal-experience[open] .portal-open-label b {
-  transform: rotate(45deg);
+  border: 0;
 }
 .portal-experience .demo-shell {
   margin-bottom: 24px;
@@ -601,18 +556,6 @@ p {
   .safety-row {
     margin-top: 28px;
   }
-  .portal-experience > summary {
-    align-items: flex-start;
-    padding: 28px 0;
-    flex-direction: column;
-    gap: 22px;
-  }
-  .portal-experience summary strong {
-    font-size: 26px;
-  }
-  .portal-open-label {
-    font-size: 12px;
-  }
   .experience-benefits {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -715,4 +658,53 @@ p {
 
 .light-section {
   color-scheme: light;
+}
+
+/* A demo já está aberta; este cabeçalho apresenta a interação, sem esconder o portal. */
+.portal-demo-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 28px;
+  padding: 0 0 28px;
+}
+.portal-demo-intro .eyebrow {
+  font-size: 9px;
+  margin-bottom: 12px;
+  color: #c1ec42;
+}
+.portal-demo-intro h3 {
+  font-size: 27px;
+  line-height: 1.25;
+  font-weight: 450;
+  letter-spacing: -0.025em;
+  margin-bottom: 12px;
+}
+.portal-demo-intro p:last-child {
+  font-size: 13px;
+  color: var(--muted);
+}
+.portal-demo-label {
+  color: #c1ec42;
+  background: #c1ec420a;
+  border: 1px solid #c1ec4233;
+  border-radius: 30px;
+  padding: 12px 18px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+@media (max-width: 800px) {
+  .portal-demo-intro {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+  .portal-demo-intro h3 {
+    font-size: 25px;
+  }
+}
+@media print {
+  .portal-demo-intro {
+    display: none;
+  }
 }

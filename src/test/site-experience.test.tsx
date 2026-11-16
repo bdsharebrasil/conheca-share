@@ -33,8 +33,6 @@ describe("Apresentação e navegação", () => {
     const montar = () => render(createElement(StrictMode, null, createElement(Home)));
     const primeira = montar();
     const menuAntigo = primeira.getByRole("button", { name: "Menu" });
-    const portal = primeira.container.querySelector("#portal-experience")!;
-    fireEvent.click(portal.querySelector("summary")!);
     fireEvent.click(primeira.getByRole("button", { name: "Outra curiosidade ↻" }));
     expect(primeira.container.querySelector(".fact-row")).toHaveTextContent(
       "circunferência da Terra",
@@ -56,21 +54,34 @@ describe("Apresentação e navegação", () => {
     expect(rolarAte).toHaveBeenCalledTimes(1);
   });
 
-  it("mantém todas as mensagens acessíveis quando o visitante reduz o movimento", () => {
+  it("mostra só a abertura e a seção A Share logo depois, inclusive com movimento reduzido", () => {
     movimento(true);
-    const { container } = render(createElement(Home));
-    const mensagens = container.querySelectorAll("[data-hero-panel]");
-    expect(mensagens).toHaveLength(3);
-    for (const mensagem of mensagens) {
-      expect(mensagem.getAttribute("aria-hidden")).toBe("false");
-      expect(mensagem.hasAttribute("inert")).toBe(false);
-    }
+    const { container, getByRole } = render(createElement(Home));
+    const hero = container.querySelector<HTMLElement>(".hero-story")!;
+    expect(hero.querySelectorAll("h1")).toHaveLength(1);
+    expect(hero.querySelector("h2, .story-sheet, [data-hero-go]")).toBeNull();
+    expect(hero.nextElementSibling?.id).toBe("essencia");
+    expect(hero.style.getPropertyValue("--hero-opacity")).toBe("1");
+    expect(getByRole("heading", { name: "Seu tempo, em outra altitude." })).toBeVisible();
+    expect(
+      getByRole("heading", { name: "Você conquista tempo. Nós cuidamos do caminho." }),
+    ).toBeVisible();
   });
-  it("sincroniza camadas em 30%, avança e volta ao mesmo ponto da rolagem", () => {
+  it("deixa a demonstração visível e funcional sem precisar expandir um painel", () => {
+    movimento(true);
+    const { container, getByRole } = render(createElement(Home));
+    const portal = container.querySelector("#portal-experience")!;
+    expect(portal.closest("details")).toBeNull();
+    expect(getByRole("navigation", { name: "Demonstração do portal" })).toBeVisible();
+    fireEvent.click(getByRole("button", { name: /^Simular custos$/ }));
+    expect(getByRole("heading", { name: "O custo, antes do embarque." })).toBeVisible();
+    expect(container.querySelector("#sim-form")).not.toBeNull();
+  });
+  it("sincroniza a saída em 30%, avança e volta ao mesmo ponto da rolagem", () => {
     movimento(false);
     const { container } = render(createElement(Home));
     const hero = container.querySelector<HTMLElement>(".hero-story")!;
-    Object.defineProperty(hero, "offsetHeight", { value: 4000 });
+    Object.defineProperty(hero, "offsetHeight", { value: 1000 });
     vi.stubGlobal("innerHeight", 1000);
     const fila: FrameRequestCallback[] = [];
     vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
@@ -84,13 +95,13 @@ describe("Apresentação e navegação", () => {
       fireEvent.scroll(window);
       act(() => fila.shift()?.(0));
     };
-    rolar(-900);
-    expect(hero.dataset["storyProgress"]).toBe("0.3000");
+    rolar(-300);
+    expect(hero.dataset["heroProgress"]).toBe("0.3000");
     const pose = hero.getAttribute("style");
-    rolar(-1800);
-    expect(hero.dataset["storyProgress"]).toBe("0.6000");
+    rolar(-600);
+    expect(hero.dataset["heroProgress"]).toBe("0.6000");
     expect(hero.getAttribute("style")).not.toBe(pose);
-    rolar(-900);
+    rolar(-300);
     expect(hero.getAttribute("style")).toBe(pose);
   });
   it("fecha a navegação por Escape e devolve o foco ao botão Menu", () => {

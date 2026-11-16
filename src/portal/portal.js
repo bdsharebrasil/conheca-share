@@ -516,7 +516,6 @@ export function iniciarPortal(root = document) {
   });
   root.querySelectorAll("[data-demo-link]").forEach((a) =>
     on(a, "click", () => {
-      root.querySelector("#portal-experience").open = true;
       goTab(a.dataset.demoLink);
     }),
   );
