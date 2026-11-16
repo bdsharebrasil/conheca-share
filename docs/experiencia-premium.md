@@ -1,5 +1,7 @@
 # Experiência institucional Share Brasil
 
+A abertura evoluiu para planos diagonais e uma aeronave em primeiro plano, com progresso contínuo guiado pela rolagem. Consulte [scrollytelling.md](scrollytelling.md) para a implementação atual e as novas prévias.
+
 A revisão parte da branch principal no commit `789acac` e mantém a comunicação centrada em gestão de cotas e administração de aeronaves.
 
 ## O que mudou

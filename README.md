@@ -38,3 +38,5 @@ A abertura usa uma cena fixa limitada à seção inicial, com três mensagens li
 A identidade visual fica em `public/premium.css`, com azul profundo, petróleo, marfim e a cor de ação `#c1ec42`. O quiz tem escolhas visuais e resumo das preferências; o módulo comercial e o contrato D1 permanecem os mesmos. O portal demonstrativo fica em uma seção expansível opcional.
 
 Validação e prévias: [docs/experiencia-premium.md](docs/experiencia-premium.md).
+
+A abertura evoluiu para scrollytelling com aeronave em primeiro plano e planos diagonais. A posição da rolagem controla a pose sem reprodução automática. Detalhes e prévias em [docs/scrollytelling.md](docs/scrollytelling.md).

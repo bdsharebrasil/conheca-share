@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { SITE_BODY } from "@/site-body";
+import { calcularCena, posicoesDasCenas } from "@/lib/story-motion";
 
 const TITLE = "GESTÃO DE COTAS, ADMINISTRAÇÃO COMPLETA - CONHEÇA A SHARE BRASIL";
 const SHARE_IMAGE = "https://conheca.share-brasil.com/assets/share-signature-logo.png";
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/")({
       { rel: "stylesheet", href: "/quiz.css" },
       { rel: "stylesheet", href: "/action-colors.css" },
       { rel: "stylesheet", href: "/premium.css" },
+      { rel: "stylesheet", href: "/scrollytelling.css" },
       { rel: "canonical", href: "https://conheca.share-brasil.com/" },
     ],
   }),
@@ -85,6 +87,8 @@ function Index() {
     const navigation = document.querySelector<HTMLElement>("#site-navigation");
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
+    let ultimoProgresso = -1;
+    let ultimoMovimento: boolean | undefined;
 
     const update = () => {
       frame = 0;
@@ -92,15 +96,23 @@ function Index() {
       if (!hero) return;
       const range = Math.max(1, hero.offsetHeight - window.innerHeight);
       const progress = Math.max(0, Math.min(1, -hero.getBoundingClientRect().top / range));
-      const active = Math.min(2, Math.floor(progress * 3));
+      if (progress === ultimoProgresso && reduceMotion.matches === ultimoMovimento) return;
+      ultimoProgresso = progress;
+      ultimoMovimento = reduceMotion.matches;
+      const cena = calcularCena(progress);
+      hero.dataset["storyProgress"] = cena.progresso.toFixed(4);
+      hero.dataset["storyTheme"] = reduceMotion.matches ? "escuro" : cena.tema;
+      Object.entries(cena.variaveis).forEach(([nome, valor]) =>
+        hero.style.setProperty(nome, valor),
+      );
       panels.forEach((panel, index) => {
-        const visible = reduceMotion.matches || index === active;
+        const visible = reduceMotion.matches || index === cena.cena;
         panel.classList.toggle("is-active", visible);
         panel.setAttribute("aria-hidden", String(!visible));
         panel.toggleAttribute("inert", !visible);
       });
       buttons.forEach((button, index) =>
-        button.setAttribute("aria-pressed", String(index === active)),
+        button.setAttribute("aria-pressed", String(index === cena.cena)),
       );
     };
     const onScroll = () => {
@@ -116,7 +128,10 @@ function Index() {
       }
       const start = hero.getBoundingClientRect().top + window.scrollY;
       const range = Math.max(1, hero.offsetHeight - window.innerHeight);
-      window.scrollTo({ top: start + range * ((index + 0.12) / 3), behavior: "smooth" });
+      window.scrollTo({
+        top: start + range * (posicoesDasCenas[index as 0 | 1 | 2] ?? 0),
+        behavior: "smooth",
+      });
     };
     const closeMenu = () => {
       menu?.setAttribute("aria-expanded", "false");

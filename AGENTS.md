@@ -40,5 +40,7 @@ use the editor.
 
 - Public copy must focus on gestão de cotas, administração de cotas and gestão privada de aeronaves. Apply this to headings, metadata, quiz results, simulator labels, downloads and WhatsApp messages. Keep the existing commercial rules and optional contact flow.
 
-- Keep the pinned aircraft scene limited to .hero-story. Never intercept wheel/touch scrolling or apply continuous motion to the quiz, forms or tables. Reduced-motion visitors must have all three messages readable without the pinned scroll. Keep the real aircraft fully framed.
+- Keep the pinned aircraft scene limited to .hero-story. Never intercept wheel/touch scrolling or apply continuous motion to the quiz, forms or tables. Reduced-motion visitors must have all three messages readable without the pinned scroll. Keep the aircraft illustration fully framed.
 - The quiz uses visual choices and a live preference summary; do not reveal or imply a model before the final recommendation. Maintain optional contact, the seven-model scoring and D1 contract. The portal demo is an optional native details disclosure, not a replacement for the institutional services.
+
+- The opening is scroll-driven scrollytelling: src/lib/story-motion.ts maps normalized progress directly to the aircraft and diagonal sheets in public/scrollytelling.css. Do not replace it with threshold-triggered fades, autoplay or time-based smoothing. Keep 30%/60%/reverse tests. Use overflow:clip on the sticky stage so keyboard focus cannot scroll its internal layers. The aircraft is an illustrative transparent render with CSS perspective, not certified fleet imagery.
