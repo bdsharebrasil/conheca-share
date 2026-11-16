@@ -48,6 +48,38 @@ export function iniciarCinema(root: ParentNode = document) {
       return { heading, ariaLabel, words };
     });
 
+  const scenes = Array.from(root.querySelectorAll<HTMLElement>(".chapter")).filter(
+    (section) => section !== hero,
+  );
+  scenes.forEach((scene, index) => {
+    scene.classList.add("scene");
+    scene.style.zIndex = String(index + 2);
+    if (getComputedStyle(scene).backgroundColor === "rgba(0, 0, 0, 0)")
+      scene.style.backgroundColor = "var(--bg)";
+  });
+  const updateScenes = () => {
+    const vh = window.innerHeight;
+    scenes.forEach((scene) => {
+      const height = scene.offsetHeight;
+      scene.style.setProperty("--scene-top", `${Math.min(0, vh - height)}px`);
+      if (reduceMotion.matches) {
+        scene.style.removeProperty("--scene-cut");
+        scene.style.removeProperty("--scene-tilt");
+        scene.style.removeProperty("--scene-dim");
+        return;
+      }
+      const top = scene.getBoundingClientRect().top;
+      const enter = Math.max(0, Math.min(1, (vh - top) / Math.max(1, vh * 0.85)));
+      const cut = (1 - enter) * Math.min(window.innerWidth * 0.09, 140);
+      scene.style.setProperty("--scene-cut", `${cut.toFixed(1)}px`);
+      scene.style.setProperty("--scene-tilt", `${((1 - enter) * -1.6).toFixed(3)}deg`);
+      const next = scene.nextElementSibling as HTMLElement | null;
+      const nextTop = next?.classList.contains("scene") ? next.getBoundingClientRect().top : vh;
+      const cover = Math.max(0, Math.min(1, 1 - nextTop / vh));
+      scene.style.setProperty("--scene-dim", (cover * 0.55).toFixed(3));
+    });
+  };
+
   const progressButton = document.createElement("button");
   progressButton.type = "button";
   progressButton.className = "page-progress";
@@ -94,6 +126,7 @@ export function iniciarCinema(root: ParentNode = document) {
         word.style.opacity = String(0.2 + 0.8 * reveal);
       });
     });
+    updateScenes();
     if (!hero) return;
     const progress = reduceMotion.matches
       ? 0
@@ -149,6 +182,12 @@ export function iniciarCinema(root: ParentNode = document) {
       words.forEach((word) => word.replaceWith(document.createTextNode(word.textContent ?? "")));
       if (ariaLabel === null) heading.removeAttribute("aria-label");
       else heading.setAttribute("aria-label", ariaLabel);
+    });
+    scenes.forEach((scene) => {
+      scene.classList.remove("scene");
+      ["z-index", "background-color", "--scene-top", "--scene-cut", "--scene-tilt", "--scene-dim"].forEach((n) =>
+        scene.style.removeProperty(n),
+      );
     });
     if (frame) window.cancelAnimationFrame(frame);
   };
