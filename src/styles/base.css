@@ -1649,6 +1649,9 @@ fieldset {
   border-top: 1px solid var(--line);
   padding-top: 22px;
 }
+.whatsapp-icon {
+  border: 1px solid #4b4635;
+}
 .site-footer > p,
 .site-footer small {
   margin-left: auto;
